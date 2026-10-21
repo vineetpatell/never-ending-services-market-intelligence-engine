@@ -10,7 +10,6 @@ import { LightweightChart } from "../charts/LightweightChart";
 import { useChartStore } from "../charts/store";
 import {
   type Candle,
-  type ChartDataQuery,
   type ChartDataSet,
   type Exchange,
   type IndicatorConfig,
