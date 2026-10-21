@@ -36,13 +36,13 @@ export function IndicatorValues({ rows }: { rows: IndicatorValueRow[] }) {
             <tr key={row.id}>
               <td className="py-2 pr-3 font-medium text-[var(--color-nes-ink)] nes-dark:text-[var(--color-nes-d-ink)]">
                 <span className="inline-flex items-center gap-2">
+                  <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: row.color }} aria-hidden="true" />
                   {row.label}
-                  <span className="inline-flex items-center rounded-full bg-black/5 px-1.5 py-0.5 text-[10px] font-semibold text-white nes-dark:bg-white/10" style={{ backgroundColor: row.color }}>
-                    {row.color}
-                  </span>
                 </span>
               </td>
+              <td className="py-2 pr-3 text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)] capitalize">{row.pane}</td>
               <td className="py-2 pr-3 text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)]">{row.params}</td>
+              <td className="py-2 pr-3 text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)]">{row.unit || "—"}</td>
               <td className="text-right tnum py-2 pr-3 font-semibold">{row.latest}</td>
               <td />
             </tr>
