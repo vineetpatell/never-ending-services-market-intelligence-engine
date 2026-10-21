@@ -109,7 +109,7 @@ export function ChartExplorerPage() {
     refresh,
   } = store;
 
-  const [symbols, setSymbols] = useState<SymbolRecord[]>([]);
+  const [symbols] = useState<SymbolRecord[]>(() => createDemoProvider().getSymbols());
   const [customFrom, setCustomFrom] = useState<string>("");
   const [customTo, setCustomTo] = useState<string>("");
   const [crosshair, setCrosshair] = useState<{
@@ -117,11 +117,6 @@ export function ChartExplorerPage() {
     price: number;
     candle: Candle | null;
   } | null>(null);
-
-  useEffect(() => {
-    const provider = createDemoProvider();
-    setSymbols(provider.getSymbols());
-  }, []);
 
   const enabledIndicators = useMemo(
     () => indicators.filter((i) => i.enabled),
@@ -191,7 +186,7 @@ export function ChartExplorerPage() {
     source,
     status,
     isLive,
-    lastUpdatedAt: Date.now(),
+    lastUpdatedAt: availableTo,
     note: "All values synthetic � demo only.",
     availableStart: availableFrom,
     availableEnd: availableTo,

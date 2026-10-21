@@ -122,13 +122,14 @@ export function LightweightChart({
     };
     chart.subscribeCrosshairMove(crosshairHandler);
 
+    const indicatorRefsCurrent = indicatorRefs.current;
     return () => {
       chart.unsubscribeCrosshairMove(crosshairHandler);
       chart.remove();
       chartRef.current = null;
       candlestickRef.current = null;
       volumeRef.current = null;
-      indicatorRefs.current.clear();
+      indicatorRefsCurrent.clear();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -144,7 +145,6 @@ export function LightweightChart({
       volume: volumeRef,
       indicatorRefs,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.candles, data.symbol, indicators, volumeVisible, height]);
 
   return (

@@ -56,7 +56,7 @@ export function createDemoHistory(
   const bars: Candle[] = [];
   const start = new Date(2013, 11, 30); // Monday
   const end = new Date(2026, 8, 30); // 2026-09-30
-  let cursor = new Date(start);
+  const cursor = new Date(start);
 
   while ( cursor <= end ) {
     const day = cursor.getDay();
