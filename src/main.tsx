@@ -10,6 +10,7 @@ import { LibraryPage, SettingsPage } from "./pages/Misc";
 import { NotFoundPage } from "./pages/NotFound";
 import { ScreenerPage, TradingOverviewPage } from "./pages/Trading1";
 import { AnalysisPage, WatchlistPage } from "./pages/Trading2";
+import { ChartExplorerPage } from "./pages/ChartExplorer";
 import { BacktestingPage, StrategiesPage } from "./pages/Trading3";
 import { PaperPage } from "./pages/Trading4";
 import { RiskPage } from "./pages/Trading5";
@@ -27,6 +28,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/trading/screener" element={<ScreenerPage />} />
           <Route path="/trading/watchlist" element={<WatchlistPage />} />
           <Route path="/trading/analysis" element={<AnalysisPage />} />
+<Route path="/trading/chart" element={<ChartExplorerPage />} />
           <Route path="/trading/strategies" element={<StrategiesPage />} />
           <Route path="/trading/backtesting" element={<BacktestingPage />} />
           <Route path="/trading/paper" element={<PaperPage />} />

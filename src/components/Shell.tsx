@@ -11,6 +11,7 @@ const NAV = [
       { to: "/trading/screener", label: "Screener" },
       { to: "/trading/watchlist", label: "Watchlist" },
       { to: "/trading/analysis", label: "Stock analysis" },
+{ to: "/trading/chart", label: "Chart explorer" },
       { to: "/trading/strategies", label: "Strategies" },
       { to: "/trading/backtesting", label: "Backtesting" },
       { to: "/trading/paper", label: "Paper trading" },
