@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import type { MutableRefObject } from "react";
+import type { MutableRefObject, ReactNode } from "react";
 import type { Candle, ChartDataSet, IndicatorPane, IndicatorSeries } from "./types";
 import { formatISODate } from "./date";
 
@@ -29,7 +29,7 @@ interface LightweightChartProps {
   className?: string;
   volumeVisible?: boolean;
   onCrosshair?: (hit: { time: number; price: number; candle: Candle | null }) => void;
-  overlay?: React.ReactNode;
+  overlay?: ReactNode;
 }
 
 const toChartTime = (ms: number): Time => Math.floor(ms / 1000) as Time;
