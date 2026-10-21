@@ -7,8 +7,8 @@ import {
 } from "../components/ui";
 import { IndicatorValues } from "./IndicatorValues";
 import { LightweightChart } from "../charts/LightweightChart";
+import { useChartStore } from "../charts/store";
 import {
-  useChartStore,
   type Candle,
   type ChartDataQuery,
   type ChartDataSet,
@@ -41,9 +41,9 @@ function paramsText(cfg: IndicatorConfig): string {
     case "rsi":
       return `period ${cfg.period}`;
     case "macd":
-      return `fast ${cfg.fast} · slow ${cfg.slow} · signal ${cfg.signal}`;
+      return `fast ${cfg.fast} ï¿½ slow ${cfg.slow} ï¿½ signal ${cfg.signal}`;
     case "bb":
-      return `period ${cfg.period} · k ${cfg.k}`;
+      return `period ${cfg.period} ï¿½ k ${cfg.k}`;
     default:
       return "";
   }
@@ -61,7 +61,7 @@ function latestValue(series: IndicatorSeries): string | null {
 }
 
 function unitFor(series: IndicatorSeries): string {
-  if (series.pane === "rsi") return "0–100";
+  if (series.pane === "rsi") return "0ï¿½100";
   if (series.pane === "macd") return "line/hist";
   return "price";
 }
@@ -77,7 +77,7 @@ function buildIndicatorRows(
       label: s.label,
       color: s.color,
       params: cfg ? paramsText(cfg) : "",
-      latest: latestValue(s) ?? "—",
+      latest: latestValue(s) ?? "ï¿½",
       pane: s.pane,
       unit: unitFor(s),
     };
@@ -193,7 +193,7 @@ export function ChartExplorerPage() {
     status,
     isLive,
     lastUpdatedAt: Date.now(),
-    note: "All values synthetic — demo only.",
+    note: "All values synthetic ï¿½ demo only.",
     availableStart: availableFrom,
     availableEnd: availableTo,
   };
@@ -210,7 +210,7 @@ export function ChartExplorerPage() {
         }
         actions={
           <Button variant="ghost" onClick={() => refresh()} disabled={loading}>
-            {loading ? "Loading…" : "Refresh"}
+            {loading ? "Loadingï¿½" : "Refresh"}
           </Button>
         }
       />
@@ -304,7 +304,7 @@ export function ChartExplorerPage() {
         <div className="px-4 py-3 relative">
           {showLoading && (
             <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 text-white">
-              Loading demo data…
+              Loading demo dataï¿½
             </div>
           )}
           {showEmpty && (
@@ -403,7 +403,7 @@ export function ChartExplorerPage() {
             </div>
             <div className="flex items-center gap-3">
               <span className="text-xs font-semibold text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)]">
-                {status} · {source}
+                {status} ï¿½ {source}
               </span>
               <span className="h-2 w-2 rounded-full bg-current" />
               <span className="text-xs font-bold tracking-wide text-[var(--color-nes-accent)]">
@@ -434,7 +434,7 @@ export function ChartExplorerPage() {
           Available range: {availableRangeText({
             availableStart: availableFrom,
             availableEnd: availableTo,
-          })} · {status === "DEMO" ? "Synthetic fixtures — not live data" : ""}
+          })} ï¿½ {status === "DEMO" ? "Synthetic fixtures ï¿½ not live data" : ""}
         </p>
       )}
     </div>
