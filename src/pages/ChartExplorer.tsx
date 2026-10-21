@@ -173,7 +173,7 @@ export function ChartExplorerPage() {
 
   const setPeriod = (id: string, patch: Partial<IndicatorConfig>) => {
     setIndicators(
-      indicators.map((c) => (c.id === id ? { ...c, ...patch } : c)),
+      indicators.map((c) => (c.id === id ? ({ ...c, ...patch } as IndicatorConfig) : c)),
     );
   };
 
