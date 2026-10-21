@@ -24,7 +24,9 @@ export function IndicatorValues({ rows }: { rows: IndicatorValueRow[] }) {
         <thead>
           <tr className="border-b border-[var(--color-nes-line)] nes-dark:border-[var(--color-nes-d-line)]">
             <th className="text-left font-semibold text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)] py-2 pr-3">Indicator</th>
+            <th className="text-left font-semibold text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)] py-2 pr-3">Pane</th>
             <th className="text-left font-semibold text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)] py-2 pr-3">Params</th>
+            <th className="text-left font-semibold text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)] py-2 pr-3">Unit</th>
             <th className="text-right font-semibold text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)] py-2 pr-3">Latest</th>
             <th className="w-8"></th>
           </tr>
