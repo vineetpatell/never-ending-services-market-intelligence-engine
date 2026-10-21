@@ -47,7 +47,17 @@ the example → run lint, type-check, tests, build → start frontend (and backe
 only when its phase lands) → verify loopback-only access → confirm every
 market/policy value shows DEMO labelling.
 
+## Verification commands (verified 2026-10-21)
+
+- `npm run lint` — ESLint over `src/`.
+- `npm run typecheck` — `tsc -b`.
+- `npm test` — Vitest (jsdom) over `src/charts/__tests__/`.
+- `npm run build` — `tsc -b && vite build`.
+
+All four must pass before a change is considered done.
+
 ## Reproducibility rule
+
 
 Per doc 17 §6: do not claim a command works until it has been run successfully
 in this environment. Record exact commands + outcomes in milestone notes.

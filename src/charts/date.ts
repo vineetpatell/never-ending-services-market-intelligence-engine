@@ -20,12 +20,14 @@ export function istMidnight(year: number, month: number, day: number): number {
 
 /** Format a UTC timestamp as an IST calendar date, e.g. "2026-09-30". */
 export function formatISODate(ts: number): string {
-  return new Intl.DateTimeFormat("en-IN", {
+  const parts = new Intl.DateTimeFormat("en-IN", {
     timeZone: "Asia/Kolkata",
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).format(new Date(ts));
+  }).formatToParts(new Date(ts));
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+  return `${get("year")}-${get("month")}-${get("day")}`;
 }
 
 /**
