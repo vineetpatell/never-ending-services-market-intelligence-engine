@@ -1,0 +1,55 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Error Handling & Diagnostics Plan
+Document ID: NES-OPS-015 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Failure states, logging and local troubleshooting
+1. Objectives
+  Make failures understandable without exposing internals or secrets.
+  Distinguish user errors, provider failures, stale data and application bugs.
+  Provide enough diagnostic context to troubleshoot locally.
+ 
+2. Error categories
+ Category
+User-facing behaviour
+Validation
+Explain the field to fix; preserve safe entered values.
+Provider unavailable
+Show connection status, last update and retry option.
+Stale/partial data
+Warn that data is stale or incomplete; do not imply live status.
+Document parse failure
+Explain file/page failure and allow another file or manual entry.
+Local model unavailable
+Offer retry or non-AI workflow where possible.
+Unexpected error
+Show safe message and local diagnostic reference; no stack trace.
+Cancelled operation
+Mark cancelled rather than failed or successful.
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+3. Logging rules
+  Use structured logs with timestamp, level, request/operation ID and safe status fields.
+  Never log API keys, passwords, full policy text or unnecessary personal identifiers.
+  Redact file paths and sensitive metadata where appropriate.
+  Rotate or limit log size and document log retention.
+ 
+4. Diagnostics screen
+  Application version and runtime status.
+  Database/local storage status where implemented.
+  Market provider connection status and last successful update.
+  Local AI model availability and resource errors.
+  Recent safe error summaries with retry or documentation link.
+ 
+5. Acceptance
+  Every asynchronous workflow has a meaningful failure state.
+  Retry does not duplicate destructive or financial operations.
+  Errors can be diagnosed without collecting unnecessary sensitive data.
+ 

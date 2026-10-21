@@ -1,0 +1,97 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Document Register & Reading Order
+Document ID: NES-DOC-000 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Index for the NES project documentation pack
+1. Document register
+ No.
+Document
+When to use
+01
+PRD
+Define goals, scope and acceptance.
+02
+UI/UX Specification
+Design and implement page behaviour.
+03
+SRS
+Turn needs into testable requirements.
+04
+Architecture Design
+Define domains, layers and data flow.
+05
+Implementation Roadmap
+Manage milestones and exit criteria.
+06
+Cline Instructions
+Standing repository rules for AI-assisted coding.
+07
+API Contracts
+Agree frontend/backend boundaries.
+08
+Data Model
+Plan entities and relationships.
+09
+Test Strategy
+Define verification and release gates.
+10
+Security & Privacy
+Protect local documents and credentials.
+11
+Market Data Specification
+Evaluate provider and freshness constraints.
+12
+Backtesting Methodology
+Define reproducible historical tests.
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+No.
+Document
+When to use
+13
+Insurance Rules
+Define extraction review and comparisons.
+14
+AI Evaluation
+Grounding, uncertainty and privacy tests.
+15
+Error Handling
+Diagnostics and safe error behaviour.
+16
+Backup & Retention
+Recovery and deletion semantics.
+17
+Environment Setup
+Reproducible local development.
+18
+User Guide
+Explain prototype use and limitations.
+19
+Release Notes Template
+Record verified changes.
+20
+Future Compliance Review
+Gate before customer-facing regulated services.
+21
+ADR Template
+Record major technical decisions.
+2. Recommended order
+  Start with 01 PRD, 02 UI/UX, 04 Architecture, 05 Roadmap and 06 Cline Instructions.
+  Before backend integration, complete 07 API Contracts, 08 Data Model and 09 Test Strategy.
+  Before real documents, complete 10 Security & Privacy and 16 Backup & Retention.
+  Before market data, complete 11 Market Data and 12 Backtesting Methodology.
+  Before AI use, complete 13 Insurance Rules and 14 AI Evaluation as relevant.
+ 
+3. Status tracking
+For each document, track: Draft → Reviewed → Accepted → Updated. Record owner, version, last updated date and links
+to relevant code/decisions. Keep all documents in the repository under docs/.
+These documents are initial project baselines. Update them as the implementation evolves; they are not evidence
+that the described features are already built.

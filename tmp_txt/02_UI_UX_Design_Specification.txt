@@ -1,0 +1,119 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+UI/UX Design Specification
+Document ID: NES-UX-002 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Navigation, tokens, responsive behaviour and page states
+1. Experience principles
+  Goal-first rather than feature-first: users start with tasks such as analyse a stock or compare policies.
+  Progressive disclosure: simple view first; advanced controls are optional.
+  Hybrid theme: light dashboard/insurance and optional dark trading workspace.
+  Explainable outputs: source, freshness, assumptions and limitations are visible.
+  Motion is purposeful and can be reduced or disabled.
+ 
+2. Design tokens
+ Token
+Light
+Dark trading
+Background
+#F6F7F5
+#0D1218
+Surface
+#FFFFFF
+#141C25
+Primary text
+#17211D
+#F0F4F7
+Secondary text
+#68736D
+#A3B0BC
+Border
+#E1E6E1
+#2A3947
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+Token
+Light
+Dark trading
+Primary
+#176B50
+#48B68B
+Accent
+#D86636
+#F18A58
+Positive / negative
+#16764B / #C43D3D
+#39C58A / #F16B70
+Typography and spacing
+  Font: Inter. Page titles 28–32 px; section headings 20–24 px; body 14–16 px; metadata 12–13 px.
+  Spacing scale: 4, 8, 12, 16, 24, 32, 40, 48 px.
+  Cards: 14–18 px radius; controls 40–44 px high; use restrained shadows.
+  Use tabular numerals for financial values and never rely on colour alone.
+ 
+3. Navigation
+ Primary destination
+Subpages
+Home
+Dashboard, tasks, notifications
+Trading
+Market overview, screener, watchlist, analysis, strategies, backtesting, paper trading, risk
+Insurance
+Overview, term life, health, vehicle, vault, comparison, claims, renewals
+AI Copilot
+Questions, explanations, source-linked insights
+Library
+Saved research, policies, reports and exports
+Settings
+Data sources, local AI, security, backups, accessibility
+4. Page wireframes and behaviour
+Home
+Top: global search, data status, notifications and profile. Main: greeting and goal-first command area. Quick actions for
+stock analysis, screener, backtest, understand policy, compare policies and renewal review. Then demo market snapshot,
+watchlist, insurance summary, tasks and recent insights.
+Trading
+  Market overview: session status, index summaries, chart, movers, events and source timestamp.
+  Screener: simple/advanced filters, search, sorting, saved screens and demo data labels.
+  Stock analysis: overview, chart, fundamentals, technicals, events and AI explanation.
+  Backtesting wizard: strategy → universe → period → costs/slippage → validate → results.
+  Paper trading: simulated positions and orders, with a persistent no-real-orders banner.
+  Portfolio/risk: exposure, concentration and explained metrics.
+ 
+Insurance
+  Overview: policies, renewals, missing information and recent comparisons.
+  Term life, health and vehicle pages show category-specific fields where available.
+  Vault: upload, process status, field review, verification, search and delete/archive.
+  Compare: side-by-side coverage, exclusions, premium, restrictions, source and missing data.
+  Claims: policy-linked checklist; no promise of approval. Renewals: verified dates and reminder controls.
+ 
+Copilot, Library and Settings
+Copilot answers should separate extracted facts, calculations, model outputs and general guidance. Library stores saved
+research and documents with source/date metadata. Settings control themes, reduced motion, data sources, local AI,
+backups, privacy and diagnostics.
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 3
+5. Responsive behaviour
+ Viewport
+Behaviour
+Desktop ≥1280 px
+Expanded sidebar and multi-column cards.
+Tablet 768–1279 px
+Collapsible sidebar, two-column cards, secondary panels as drawers.
+Mobile <768 px
+Drawer navigation, stacked cards, simplified chart controls and step-by-step forms.
+6. Accessibility and states
+  All controls have labels and keyboard focus.
+  Every async component defines loading, empty, success, error and disabled states.
+  Reduced-motion setting and static fallbacks are mandatory.
+  Dialogs and destructive actions require clear confirmation.
+  Tables remain readable and support horizontal scroll or card conversion on mobile.
+ 

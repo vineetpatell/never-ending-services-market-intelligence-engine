@@ -1,0 +1,68 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+User Guide & Quick Start
+Document ID: NES-USER-018 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+How to navigate the prototype and understand its limitations
+1. Start here
+The prototype uses illustrative data. Until real integrations are implemented and verified, values are for interface
+demonstration only.
+2. Home dashboard
+  Use the command area to start a task.
+  Open Trading for stock research and simulated strategy workflows.
+  Open Insurance to review sample policy screens and comparison behaviour.
+  Use Library to find saved demo research and reports.
+  Check data status badges before interpreting any displayed value.
+ 
+3. Trading workflows
+Analyse a stock
+  Search a demo symbol.
+  Open Stock Analysis.
+ 
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+ Review chart, metrics, data status and AI explanation.
+  Treat all sample analysis as illustrative; it is not a recommendation.
+ 
+Backtest a strategy
+  Choose a sample strategy and symbol.
+  Set a demo date range and assumptions.
+  Run the demonstration.
+  Review results, assumptions and historical-only warning.
+ 
+Paper trading
+  Open Paper Trading.
+  Enter a simulated order in the demo interface.
+  Review quantity/exposure and confirm the simulation.
+  Verify the persistent simulation-only banner. No real order is sent.
+ 
+4. Insurance workflows
+  Use sample policy cards to explore category pages.
+  Open Policy Vault to see the prototype upload/review flow.
+  Review extracted fields before treating them as verified.
+  Select policies in Compare Policies to inspect differences and missing fields.
+  Use Claims Assistant as a checklist organiser, not a guarantee of claim approval.
+ 
+5. AI Copilot
+  Use preset prompts to see demonstration responses.
+  Check whether a response is demo content or grounded in real configured sources.
+  Review cited sources and limitations when available.
+  Do not enter real sensitive policy information into a prototype that has not been reviewed for privacy.
+ 
+6. Theme and accessibility
+  Switch between light dashboard and dark trading workspace.
+  Enable reduced motion if animations are uncomfortable or distracting.
+  Use keyboard navigation and visible focus states.
+ 
+7. Known limitations
+  Demo data is not live market data or a real insurer quote.
+  No live broker orders or insurance purchases.
+  Backend integrations may not yet exist.
+  Prototype AI responses do not prove that a local model has been connected.
+ 

@@ -1,0 +1,69 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Insurance Document & Comparison Rules
+Document ID: NES-INS-013 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Extraction, verification, comparison and claims workflow
+1. Purpose
+Define how the platform reads, reviews and compares policy documents while preserving traceability and uncertainty.
+2. Supported categories
+  Term life insurance.
+  Health insurance.
+  Vehicle insurance for car/two-wheeler.
+  Other categories remain out of scope until a category-specific field schema is defined.
+ 
+3. Document processing workflow
+File selected → type/size validation → text extraction/OCR → extracted fields with provenance → uncertainty flags → user
+review/edit → verified record → comparison/reminders.
+4. Field model
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+Field group
+Examples / rules
+Identity
+Insurer, policy category, policy reference; mark missing or ambiguous values.
+Dates
+Start, expiry/renewal, waiting period dates; preserve source and timezone/date format.
+Premium
+Amount, currency, payment frequency, taxes if explicitly stated.
+Coverage
+Sum insured, covered members, benefits, limits and add-ons as applicable.
+Restrictions
+Exclusions, co-pay, deductible, waiting periods, sub-limits and conditions where present.
+Provenance
+Document name/page/section or extraction location when available.
+Review
+Unreviewed, corrected, verified by user, uncertain or failed.
+5. Extraction rules
+  Never silently convert OCR text into verified policy facts.
+  Allow user correction and preserve the distinction between extracted and confirmed values.
+  Do not infer an exclusion or benefit when it is not present in the source.
+  Show unreadable or missing fields as unknown, not zero or “not covered”.
+  Keep the source document available for verification where lawful and appropriate.
+ 
+6. Comparison rules
+  Compare like-for-like fields only and label non-comparable terms.
+  Surface exclusions, restrictions, co-pay, deductibles, waiting periods and missing information—not only premiums.
+  Show source document and date for each material comparison field.
+  Do not create a single suitability score without transparent criteria and limitations.
+  Do not invent insurer quotes, current prices or claim approval probabilities.
+ 
+7. Claims assistance
+  Provide a document checklist and relevant policy references.
+  Clearly distinguish extracted policy clauses from general guidance.
+  Do not guarantee claim acceptance or invent insurer-specific processes.
+  Ask the user to verify deadlines and requirements with the insurer where source evidence is incomplete.
+ 
+8. Privacy
+  Use synthetic policies in the prototype.
+  Keep local document storage as default in the intended application.
+  Do not include full policy text or personal identifiers in logs.
+  Make export, deletion and backup implications clear.
+ 

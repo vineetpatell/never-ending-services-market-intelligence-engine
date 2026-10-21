@@ -1,0 +1,44 @@
+{
+  "name": "nes-ai-finance-insurance-platform",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "NES AI Finance & Insurance Intelligence Platform — local-first personal workspace (frontend foundation, Phase 1B)",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5173",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "typecheck": "tsc -b",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@react-three/fiber": "9.8.2",
+    "@tailwindcss/vite": "4.3.3",
+    "gsap": "3.15.0",
+    "lightweight-charts": "^5.2.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-router-dom": "7.18.4",
+    "tailwindcss": "4.3.3",
+    "three": "0.186.1",
+    "vite": "8.3.4",
+    "zustand": "5.0.15"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@types/three": "0.186.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "eslint": "10.13.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.7",
+    "globals": "17.13.0",
+    "jsdom": "^27.0.1",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.72.0",
+    "vitest": "4.1.12"
+  }
+}

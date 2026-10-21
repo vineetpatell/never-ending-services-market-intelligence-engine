@@ -1,0 +1,59 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Market Data Source Specification
+Document ID: NES-MKT-011 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Provider evaluation, adapter contract and freshness rules
+1. Purpose
+This specification defines what must be evaluated before connecting an external market data provider. No provider should
+be treated as available or licensed until its current terms and access have been verified.
+2. Provider selection checklist
+  NSE/BSE instrument coverage and supported segments.
+  Real-time versus delayed data, timestamps and market-session semantics.
+  Historical intraday/daily data availability and retention.
+  Commercial/personal-use licence terms and redistribution restrictions.
+  API rate limits, WebSocket support and reconnection behaviour.
+  Corporate actions, adjusted data and instrument identifiers.
+  Authentication flow, token expiry and secret storage.
+  Cost, reliability, support and provider status endpoint.
+ 
+3. Adapter contract
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+Operation
+Required behaviour
+get_market_status
+Return status, source and timestamp where supported.
+search_instruments
+Normalise symbols and exchange identifiers; handle ambiguity.
+get_quote
+Return value, currency, source, timestamp and data status.
+get_history
+Return bars with timezone, interval, source and missing-data metadata.
+subscribe_updates
+Optional; reconnect safely and distinguish delayed/unavailable feeds.
+health_check
+Check provider connectivity, not whether the market itself is open.
+4. Freshness and failure states
+  Represent LIVE, DELAYED, STALE, CLOSED, DISCONNECTED, PARTIAL and DEMO as distinct states where
+ appropriate.
+ A closed market does not mean the data connection is broken.
+  Never replace missing timestamps with the current time.
+  Show the last successful update and the source of the value.
+  On provider failure, preserve last-known data only if visibly labelled stale.
+ 
+5. Trading and licence boundaries
+  Do not route orders through the market-data adapter.
+  Broker connectivity, if ever considered, requires a separate design and review.
+  Confirm the provider's terms for local storage, historical downloads and any future customer-facing use.
+  This specification does not select or endorse a particular provider.
+ 
+6. Prototype rule
+ Until a provider is selected and tested, the UI must use DEMO_DATA labels and must never show a “Live” badge.

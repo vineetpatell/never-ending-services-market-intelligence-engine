@@ -1,0 +1,48 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Backup, Restore & Data Retention Plan
+Document ID: NES-DATAOPS-016 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Local data recovery and deletion semantics
+1. Backup scope
+  Database records and user preferences.
+  Policy document files and their metadata, if real documents are later enabled.
+  Saved research and generated reports.
+  Configuration references, excluding secrets by default.
+  Versioned schema and restore instructions.
+ 
+2. Backup policy decisions
+  Choose backup location and retention based on the user's privacy needs.
+  Document whether backups are encrypted and how keys are managed.
+  Do not silently sync personal documents to a cloud location.
+  Warn if a backup omits files or sensitive records.
+  Keep backups separate from the primary data directory where feasible.
+ 
+3. Restore workflow
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+Select backup → validate archive and manifest → confirm destination → restore database and files → run integrity checks
+→ show result and any missing items.
+4. Deletion and retention
+  Define what delete means for database entries, local files, derived reports and backups.
+  Provide confirmation for permanent deletion.
+  Do not promise complete deletion from backups unless the process supports it.
+  Set retention for diagnostic logs and temporary OCR files.
+ 
+5. Test plan
+  Restore to a clean test directory.
+  Verify document checksums or file counts where appropriate.
+  Check foreign-key relationships and record counts.
+  Test missing/corrupt backup handling.
+  Document recovery steps for database and file-storage failures.
+ 
+6. Acceptance
+ Do not use the application as the only storage location for important policy documents until backup and restore
+have been tested.

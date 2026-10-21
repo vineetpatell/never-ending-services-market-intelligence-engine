@@ -1,0 +1,68 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Backtesting Methodology Specification
+Document ID: NES-BT-012 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Assumptions, metrics, bias controls and validation
+1. Purpose
+Define the minimum methodology for historical strategy testing so results are reproducible and do not accidentally overstate
+performance.
+2. Required inputs
+  Strategy name/version and parameters.
+  Symbol or universe and exchange.
+  Start/end dates and bar interval.
+  Data source, timestamp convention and adjustment policy.
+  Starting capital and position-sizing method.
+  Fees, taxes and slippage assumptions where relevant.
+  Order timing and fill assumptions.
+  Benchmark and risk-free assumptions if used.
+ 
+3. Methodology rules
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+ Avoid look-ahead bias: a decision may only use information available at that time.
+  Avoid survivorship bias where universe history is available and relevant.
+  Document missing bars, stale values and corporate-action treatment.
+  Make signal timing and fill assumptions explicit.
+  Use out-of-sample or walk-forward evaluation when appropriate.
+  Do not tune parameters on the final evaluation period without disclosure.
+  Separate training, validation and test periods for ML workflows.
+ 
+4. Required outputs
+ Metric
+Definition requirement
+Total return
+Specify cash flows, fees and calculation period.
+Benchmark return
+Name benchmark and align periods.
+Maximum drawdown
+Document equity curve basis and peak-to-trough method.
+Trade count
+Define what counts as an opened/closed trade.
+Win rate
+Define winning trade and handling of open positions.
+Costs
+Show fee and slippage assumptions.
+Equity curve
+State whether returns are realised, mark-to-market or both.
+5. Validation tests
+  Use tiny hand-calculated datasets to verify trade timing and metrics.
+  Test missing bars, gaps, duplicate bars and extreme values.
+  Test no-trade and single-trade scenarios.
+  Check that the same data and parameters reproduce the same result.
+  Compare a simple baseline strategy against expected output.
+ 
+6. Presentation rules
+  Label results historical, not predictive.
+  Show test period, source, assumptions and warnings near the results.
+  Do not use animated count-ups to obscure negative performance.
+  Do not present model confidence as calibrated unless calibration has been evaluated.
+ 
+Backtest results are simulations. They are not proof of future performance and are not a guarantee of returns.

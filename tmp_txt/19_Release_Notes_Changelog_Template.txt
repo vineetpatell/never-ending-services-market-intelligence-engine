@@ -1,0 +1,48 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Release Notes & Changelog Template
+Document ID: NES-REL-019 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Reusable release record for verified changes
+1. Release information
+ Field
+Value
+Version
+0.1.0 (template)
+Release date
+Fill in at release
+Build/commit
+Fill in actual commit identifier
+Status
+Prototype / internal testing
+Environment
+Windows local development
+2. Added
+List features that are actually implemented and verified in this release.
+3. Changed
+List behaviour or configuration changes that users should know about.
+4. Fixed
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+List verified bugs that were fixed, including issue references where available.
+5. Known issues
+List limitations, broken workflows, unsupported cases and temporary workarounds. Do not omit known safety or
+data-integrity limitations.
+6. Data and migration notes
+Document schema migrations, backups required, data compatibility and rollback steps.
+7. Verification
+  List tests run and actual outcomes.
+  List platforms and screen sizes checked.
+  Confirm demo/live data labelling.
+  Confirm paper-trading-only boundary.
+  Confirm reduced-motion and no-WebGL fallback.
+ 
+Never mark a feature as complete solely because code was generated. Record only what was actually run and
+verified.

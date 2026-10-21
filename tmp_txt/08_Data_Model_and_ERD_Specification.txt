@@ -1,0 +1,81 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Data Model & ERD Specification
+Document ID: NES-DATA-008 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Proposed entities, relationships and integrity rules
+1. Modelling principles
+  Separate source data, calculated results and user-confirmed records.
+  Record timestamps and provenance for market data and extracted policy fields.
+  Use stable identifiers; avoid using display names as primary keys.
+  Protect sensitive fields and avoid storing unnecessary personal information.
+  Version backtest configurations and model/strategy parameters.
+ 
+2. Proposed entities
+ Entity
+Key fields / relationships
+UserPreferences
+theme, reduced_motion, default_exchange, timezone, layout preferences.
+DataSourceConfig
+provider_name, enabled, status, last_success_at, settings_reference; never store plain secrets in UI data.
+Watchlist
+id, name, created_at; one-to-many WatchlistItem.
+WatchlistItem
+id, watchlist_id, symbol, exchange, order_index, added_at.
+MarketBar / QuoteCache
+symbol, exchange, timestamp, OHLCV or quote fields, source, quality/status.
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+Entity
+Key fields / relationships
+Strategy
+id, name, version, rules_json, parameters_json, created_at.
+BacktestRun
+id, strategy_version, universe, period, assumptions, status, metrics_json, created_at.
+PaperPortfolio
+id, name, initial_cash, current_cash, currency, created_at.
+PaperOrder
+id, portfolio_id, symbol, side, quantity, simulated_price, status, timestamp; simulation only.
+PaperPosition
+portfolio_id, symbol, quantity, average_price, realised/unrealised values where supported.
+Policy
+id, category, provider, policy_reference, dates, premium, coverage fields, verification_status.
+PolicyDocument
+id, policy_id, local_path_reference, checksum, mime_type, processing_status, created_at.
+ExtractedField
+document_id, field_name, raw_value, normalized_value, provenance, confidence_if_supported, review_status.
+PolicyComparison
+id, policy_ids, comparison_fields, missing_fields, generated_at.
+Reminder
+id, related_record_id, reminder_date, status, notification_preferences.
+AIResearchItem
+id, query, answer, source_refs, limitations, model_id, created_at.
+AuditEvent
+id, event_type, entity_type, entity_id, timestamp, safe_metadata.
+3. Relationships
+  Watchlist has many WatchlistItems.
+  Strategy has many versioned BacktestRuns.
+  PaperPortfolio has PaperOrders and PaperPositions.
+  Policy may have multiple PolicyDocuments.
+  PolicyDocument has many ExtractedFields, each with review status and provenance.
+  PolicyComparison references two or more Policies.
+  Reminder links to a policy or other supported record.
+ 
+4. Data integrity
+  Use decimal-safe representation for money where appropriate; avoid binary floating point for persisted currency
+ calculations.
+ Use timezone-aware timestamps internally and display local time consistently.
+  Validate quantity, date ranges, currency and category fields.
+  Do not treat unverified OCR values as authoritative.
+  Document migration strategy and test rollback/restore where supported.
+ 
+5. ERD and implementation note
+Create an ERD before implementing the real database. The entities above are a proposed logical model, not a final schema.
+Confirm provider requirements, document retention and actual workflows before migration scripts are written.

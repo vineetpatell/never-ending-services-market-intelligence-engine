@@ -1,0 +1,72 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Product Requirements Document
+Document ID: NES-PRD-001 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Goals, scope, workflows and acceptance criteria
+1. Product Summary
+NES AI Finance & Insurance Intelligence Platform is a local-first personal workspace for equity-market research, historical
+strategy testing, simulated paper trading, insurance-document understanding, policy comparison and AI-assisted
+explanations.
+Problem and goals
+  Bring trading research and personal insurance records into one coherent interface.
+  Help non-technical users complete guided tasks without needing to understand every technical metric.
+  Keep personal documents and local AI workflows on the user's machine by default.
+  Provide traceable outputs with data source, freshness, assumptions and uncertainty.
+  Build incrementally, validating the frontend before connecting real data sources.
+ 
+In scope — initial release
+  Responsive dashboard and navigation; hybrid light/dark themes.
+  NSE/BSE equity research, watchlists, stock screener, indicators and historical backtesting, subject to authorised data
+ availability.
+ Paper trading only, with explicit simulation status.
+ 
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+ Local policy document vault, extraction review, term-life/health/vehicle categories, comparison and renewal reminders.
+  AI Copilot for explanations and document Q&A;, grounded in available records.
+  Local settings, backup/restore, reports, tests and diagnostics.
+ 
+Out of scope — initial release
+  Live broker order execution; automatic investment or trading decisions.
+  Insurance purchases, policy issuance or claims guarantees.
+  Customer-facing financial or insurance services.
+  Guaranteed predictions, invented market values, or unverified insurer quotes.
+  Sending personal documents to external AI services without explicit disclosure and consent.
+ 
+Users and main workflows
+ Workflow
+Success outcome
+Analyse stock
+User sees selected data, source/time, analysis and limitations.
+Backtest strategy
+User can reproduce a historical test with visible assumptions.
+Paper trade
+Only simulated orders are created and clearly labelled.
+Understand policy
+Extracted fields can be reviewed and corrected before verification.
+Compare policies
+Material coverage, exclusions, costs and missing data are visible.
+Ask Copilot
+Answer distinguishes facts, calculations, model output and general guidance.
+Non-functional requirements
+  Usable without WebGL or animations.
+  Accessible keyboard focus and reduced-motion support.
+  No API secrets in frontend bundles or normal logs.
+  Clear loading, empty, success, error and retry states.
+  Local-first storage defaults and tested backup/restore.
+  Performance measured on target PC and a lower-power fallback device.
+ 
+Release acceptance
+  No dead navigation or misleading demo data.
+  No live orders or insurance purchase flow.
+  Important financial calculations have tests and documented assumptions.
+  Document extraction is not treated as verified until reviewed.
+  All major workflows include source/freshness/limitations where relevant.
+ 

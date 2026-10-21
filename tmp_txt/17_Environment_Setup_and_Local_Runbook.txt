@@ -1,0 +1,59 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Environment Setup & Local Runbook
+Document ID: NES-DEV-017 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Development prerequisites, configuration and troubleshooting
+1. Purpose
+Reproducible setup notes for the local Windows development environment. Exact versions should be pinned in project files
+once the stack is chosen.
+2. Development prerequisites
+  Windows 10/11 with sufficient free storage and current updates.
+  Git and the chosen Node.js LTS runtime/package manager.
+  Python 3.11 for the planned backend, installed in an isolated virtual environment.
+  Editor and Cline configured for the repository.
+  Optional local AI runtime only after the base application works.
+  Market data credentials only after provider terms and access are verified.
+ 
+3. Environment variables
+Use a local environment file that is excluded from version control. Provide a safe example file containing placeholders only.
+Never commit real credentials.
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+Variable example
+Purpose
+APP_ENV=development
+Runtime mode.
+API_BASE_URL=http://127.0.0.1:8000
+Local backend URL, if applicable.
+DATABASE_URL=...
+Local database connection; do not commit credentials.
+MARKET_PROVIDER=demo
+Explicit demo adapter until provider integration is approved.
+LOCAL_MODEL_URL=...
+Optional local model endpoint, if configured.
+4. First-run checklist
+  Clone/open the repository and install dependencies using the committed lockfile.
+  Create local environment file from the example.
+  Run lint, type-check, tests and build.
+  Start the frontend and any required local backend.
+  Verify the app opens on localhost and external network exposure is not enabled by default.
+  Confirm all displayed market/policy values are demo data until integrations are configured.
+ 
+5. Troubleshooting
+  Record the exact command and error before changing dependencies.
+  Check runtime versions against the project files.
+  Avoid upgrading multiple packages at once to fix one error.
+  Use safe diagnostics; do not paste secrets into logs or issue reports.
+  Document any environment-specific workaround.
+ 
+6. Reproducibility
+The README and this guide must be updated to match the actual implementation. Do not claim a command works until it
+has been run successfully in the target environment.

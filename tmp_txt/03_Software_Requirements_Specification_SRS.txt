@@ -1,0 +1,96 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Software Requirements Specification
+Document ID: NES-SRS-003 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Functional and non-functional requirements
+1. Purpose
+This SRS translates the product goals into testable system behaviours for a local-first personal application. Requirements
+are implementation-neutral unless a technology is explicitly specified.
+2. Functional requirements
+ ID
+Requirement
+Acceptance
+FR-001
+Navigation
+All primary destinations and subpages open correctly.
+FR-002
+Theme
+User can switch light/dark trading theme; contrast remains readable.
+FR-003
+Demo labels
+Illustrative data is visibly marked and never labelled live.
+FR-004
+Screener
+User can search, filter, sort and clear demo results.
+FR-005
+Watchlist
+User can add/remove/reorder sample symbols in prototype state.
+FR-006
+Backtesting
+Guided wizard validates required selections and displays assumption labels.
+FR-007
+Paper trading
+Only simulated orders can be created; simulation status is persistent.
+FR-008
+Policy upload UI
+Upload interaction shows processing/demo state without implying verified extraction.
+FR-009
+Field review
+Extracted fields can be edited and explicitly marked reviewed in prototype.
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+ID
+Requirement
+Acceptance
+FR-010
+Policy comparison
+Selected policies display comparable fields and missing-data indicators.
+FR-011
+Renewals
+User can view and edit demo reminders; uncertain dates are marked.
+FR-012
+Copilot
+Preset prompts return clearly labelled demonstration responses.
+FR-013
+Motion lab
+All 12 animations can be replayed; reduced motion is respected.
+FR-014
+3D fallback
+Core app works if WebGL is unavailable.
+FR-015
+Settings
+Theme and motion preferences are controllable.
+FR-016
+Errors
+Failed or unavailable states offer understandable messages and retry where appropriate.
+3. Non-functional requirements
+  NFR-001 Usability: beginner tasks use plain-language labels and guided steps.
+  NFR-002 Accessibility: keyboard support, visible focus and reduced-motion preference.
+  NFR-003 Privacy: no real sensitive documents in demo data; local-first intent documented.
+  NFR-004 Security: no frontend secrets; validate data at boundaries when backend is introduced.
+  NFR-005 Reliability: handle missing, stale and unavailable data distinctly.
+  NFR-006 Performance: core UI loads without waiting for 3D; benchmark on target hardware.
+  NFR-007 Maintainability: reusable components, typed contracts and domain logic separation.
+ 
+4. Constraints and exclusions
+  No live order routing or insurance purchases in the initial release.
+  No live market feed until an authorised provider is selected and integrated.
+  No claim that a demo AI response is a real model output.
+  No cloud database or external AI integration in the prototype unless explicitly approved.
+ 
+5. Acceptance test examples
+  AT-01: User can navigate from Home to each major module and back without dead links.
+  AT-02: Switching theme does not break text contrast or chart labels.
+  AT-03: Paper trading page always shows the simulation-only banner.
+  AT-04: Policy extraction UI requires review before marking data verified.
+  AT-05: All animation demos replay and obey reduced-motion settings.
+  AT-06: Disabling WebGL does not disable any functional workflow.
+ 

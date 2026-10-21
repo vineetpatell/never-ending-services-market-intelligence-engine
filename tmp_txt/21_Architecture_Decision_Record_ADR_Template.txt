@@ -1,0 +1,48 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Architecture Decision Record Template
+Document ID: NES-ADR-021 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Record significant technical decisions and trade-offs
+1. How to use this template
+Create one ADR file for each significant technical decision. Keep accepted decisions immutable; supersede them with a
+new ADR rather than silently rewriting history.
+2. Decision record
+ Field
+Fill in
+ADR ID
+ADR-0001
+Title
+Short decision title
+Status
+Proposed / Accepted / Superseded / Rejected
+Date
+YYYY-MM-DD
+Decision owner
+Project owner / contributor
+3. Context
+Describe the problem, constraints, requirements and why the decision is needed.
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+4. Options considered
+Option A — benefits, costs and risks.
+Option B — benefits, costs and risks.
+Option C — benefits, costs and risks, if applicable.
+5. Decision
+State the chosen option and the key reasons. Identify assumptions that must be validated.
+6. Consequences
+  Positive consequences.
+  Trade-offs and limitations.
+  Security/privacy implications.
+  Migration or compatibility impact.
+  Follow-up tasks and owners.
+ 
+7. Review trigger
+State what evidence or project change would cause this decision to be reconsidered.

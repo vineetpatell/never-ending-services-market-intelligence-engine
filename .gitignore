@@ -1,0 +1,77 @@
+# ---- Node / Vite / frontend ----
+node_modules/
+dist/
+dist-ssr/
+build/
+out/
+.next/
+.nuxt/
+vite.config.*.timestamp-*
+*.local
+.npm/
+.pnp/
+.pnp.js
+.yarn/
+coverage/
+playwright-report/
+test-results/
+
+# ---- TypeScript / build caches ----
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+
+# ---- Python / FastAPI backend (later phase) ----
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.env/
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+*.egg-info/
+
+# ---- Env / secrets (never commit real credentials) ----
+.env
+.env.*
+!.env.example
+
+# ---- Local databases / app data / backups ----
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+data/
+backups/
+*.bak
+*.zip.bak
+
+# ---- Logs / diagnostics / OS / IDE ----
+logs/
+*.log
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# ---- Local AI models / caches (never commit weights) ----
+models/
+*.gguf
+*.bin
+ollama/
+.huggingface/
+
+# ---- Generated artifacts ----
+*.pdf.log
+*.tsvite

@@ -1,0 +1,70 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Test Strategy & Acceptance Checklist
+Document ID: NES-TEST-009 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Quality gates, regression tests and data integrity
+1. Test objectives
+  Prevent misleading financial displays and workflow state errors.
+  Ensure calculations are reproducible and assumptions visible.
+  Verify local-first and simulation-only boundaries.
+  Catch navigation, responsive, accessibility and animation regressions.
+ 
+2. Test levels
+ Level
+Coverage
+Unit
+Financial calculations, validators, formatters, rule logic and state transitions.
+Integration
+API schemas, provider adapters, document parsing, database transactions.
+UI/component
+Forms, tables, modal behaviour, loading/error states and accessible controls.
+End-to-end
+Navigation, screener, backtest wizard, paper order simulation, policy review and comparison.
+Security/privacy
+Secret scanning, log redaction, file validation, local data access and backup handling.
+Performance
+Initial render, large tables, chart interaction, reduced motion and 3D fallback.
+
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+Level
+Coverage
+Accessibility
+Keyboard-only use, focus order, labels, contrast and reduced motion.
+3. Acceptance checklist
+  All six primary navigation destinations work.
+  No button looks active if it has no meaningful action.
+  All sample data is labelled illustrative/demo.
+  Dark trading and light insurance themes remain readable.
+  All 12 animations replay and reduced motion is respected.
+  Core UI works without WebGL.
+  Paper-trading action never calls a broker or creates a real order.
+  Policy extraction requires review before verified status.
+  Backtest report includes period, data source, fees/slippage assumptions and limitations.
+  Provider failure, stale data and missing data are clearly distinguished.
+  Backup restore is tested before storing real policy documents.
+ 
+4. Financial calculation tests
+  Unit tests for indicator calculations and edge cases.
+  Tests for missing bars, duplicate timestamps, split/corporate-action assumptions where supported.
+  Backtest fees, slippage, trade timing and benchmark methodology tested against known examples.
+  No look-ahead bias or accidental future data leakage.
+  Risk metrics validated with small manually checkable datasets.
+ 
+5. Document and AI tests
+  Test PDFs with selectable text, scanned pages, malformed files and mixed layouts.
+  Test incorrect/missing dates, policy numbers, premiums and exclusions.
+  Ensure extracted fields preserve source location or provenance when available.
+  Test Copilot questions with missing evidence and conflicting documents.
+  Ensure answers admit uncertainty and do not invent insurer terms or market facts.
+ 
+6. Release gates
+ Do not connect real market data, use real personal documents or rely on AI outputs until the relevant domain tests
+and privacy controls pass.

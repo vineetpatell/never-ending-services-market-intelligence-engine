@@ -1,0 +1,44 @@
+Personal-use prototype  Local-first  Version 1.0
+Page 1
+NES AI FINANCE &
+INSURANCE INTELLIGENCE
+PLATFORM
+Future Compliance Review Checklist
+Document ID: NES-COMP-020 | Version: 1.0
+Build approach: Cline-assisted development  Local-first Windows application
+Scope: Personal research, paper trading and insurance document assistance
+Planning gate before any customer-facing regulated service
+1. Purpose
+This is a future planning checklist, not legal advice or a determination that any activity is permitted. Obtain qualified
+India-specific regulatory advice before offering regulated services to customers.
+2. Trigger for review
+  Providing investment advice or personalised recommendations to customers.
+  Managing customer portfolios or executing trades on their behalf.
+  Brokerage, order routing or customer trading access.
+  Distributing, recommending, selling or purchasing insurance for customers.
+  Collecting customer financial, identity or policy documents.
+  Charging for financial/insurance services or making performance claims.
+ 
+3. Review topics
+  Applicable SEBI registrations/rules for the exact proposed activity.
+  Broker/exchange permissions, API terms and market-data licensing.
+ 
+NES INTELLIGENCE
+PROJECT DOCUMENTATION
+Personal-use prototype  Local-first  Version 1.0
+Page 2
+ Applicable IRDAI requirements and insurance intermediary/distribution rules.
+  Privacy, consent, data retention, security and breach handling.
+  Customer disclosures, complaint handling, records and audit requirements.
+  Marketing claims, performance presentation and suitability processes.
+  Tax/accounting obligations and contractual responsibilities.
+ 
+4. Separation from initial prototype
+  Keep the first release personal-use only.
+  Do not activate customer accounts, customer portfolios or customer order execution.
+  Do not represent AI outputs as guaranteed returns or claim approval.
+  Document the intended future business model before building customer-facing features.
+ 
+5. Approval gate
+ Do not launch customer-facing regulated financial or insurance capabilities until the exact business activity,
+licences, provider contracts, disclosures and operating controls have been reviewed by qualified professionals.
