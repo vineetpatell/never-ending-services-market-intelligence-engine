@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
-import type { Candle, ChartDataSet, IndicatorId, IndicatorSeries } from "./types";
+import type { MutableRefObject } from "react";
+import type { Candle, ChartDataSet, IndicatorPane, IndicatorSeries } from "./types";
+import { formatISODate } from "./date";
 
 import {
   ColorType,
@@ -8,6 +10,7 @@ import {
   LineStyle,
   BarSeries,
   CandlestickSeries,
+  HistogramSeries,
   IChartApi,
   ISeriesApi,
   LineSeries,
@@ -17,39 +20,26 @@ import {
 
 type CandlestickSeriesApi = ISeriesApi<"Candlestick">;
 type BarSeriesApi = ISeriesApi<"Bar">;
-type LineSeriesApi = ISeriesApi<"Line">;
-
-/**
- * Minimal, dependency-free React wrapper around TradingView
- * Lightweight Charts (v5). Keeps all R3F/three code out of the main
- * bundle and isolates the canvas library so the rest of the app touches
- * only the typed chart contracts in `types.ts`.
- *
- * Rendering model (documented):
- *  - Candle + volume share the canvas; volume lives on the right price
- *    scale so bar granularity never crowds the candlestick axis.
- *  - Technical indicator series are thin overlay lines on the main price
- *    axis. RSI/MACD remain *prices* only for compact visual reference;
- *    the authoritative numeric values (0–100 RSI, line/histogram) are
- *    surfaced in the sibling `IndicatorValues` panel so no indicator is
- *    presented on a misleading axis.
- */
+type IndicatorApi = ISeriesApi<"Line" | "Histogram", Time>;
 
 interface LightweightChartProps {
   data: ChartDataSet;
   indicators: IndicatorSeries[];
   height?: number;
   className?: string;
+  volumeVisible?: boolean;
   onCrosshair?: (hit: { time: number; price: number; candle: Candle | null }) => void;
-  /** Optional overlay (loading/error) rendered inside the chart frame. */
   overlay?: React.ReactNode;
 }
+
+const toChartTime = (ms: number): Time => Math.floor(ms / 1000) as Time;
 
 export function LightweightChart({
   data,
   indicators = [],
   height = 420,
   className,
+  volumeVisible = true,
   onCrosshair,
   overlay,
 }: LightweightChartProps) {
@@ -57,13 +47,12 @@ export function LightweightChart({
   const chartRef = useRef<IChartApi | null>(null);
   const candlestickRef = useRef<CandlestickSeriesApi | null>(null);
   const volumeRef = useRef<BarSeriesApi | null>(null);
-  const indicatorRefs = useRef<Map<string, LineSeriesApi>>(new Map());
+  const indicatorRefs = useRef<Map<string, IndicatorApi>>(new Map());
   const candleMapRef = useRef<Map<number, Candle>>(new Map());
 
-  // --- Mount: create chart + base series + crosshair subscription. ---
   useEffect(() => {
     const container = containerRef.current;
-    if ( !container ) return;
+    if (!container) return;
 
     const chart = createChart(container, {
       autoSize: true,
@@ -84,16 +73,20 @@ export function LightweightChart({
       timeScale: {
         borderColor: "rgba(43,43,45,0.14)",
         timeVisible: true,
+        tickMarkFormatter: (time: Time) => formatISODate((time as number) * 1000),
       },
       rightPriceScale: {
         visible: true,
-        autoScale: false,
-        scaleMargins: { top: 0, bottom: 0.18 },
+        autoScale: true,
+        scaleMargins: { top: 0.08, bottom: 0.22 },
         borderColor: "rgba(43,43,45,0.14)",
         borderVisible: true,
         textColor: "#9DA6B2",
       },
-      localization: { locale: "en-IN", dateFormat: "dd MMM yyyy" },
+      localization: {
+        locale: "en-IN",
+        timeFormatter: (time: Time) => formatISODate((time as number) * 1000),
+      },
     });
     chartRef.current = chart;
 
@@ -110,24 +103,25 @@ export function LightweightChart({
     candlestickRef.current = candlestick;
 
     const volume = chart.addSeries(BarSeries, {
-      priceScaleId: "right",
+      priceScaleId: "volume",
       priceFormat: { type: "volume" },
       title: "Volume",
     });
     volumeRef.current = volume;
+    chart.priceScale("volume", 0).applyOptions({
+      scaleMargins: { top: 0.8, bottom: 0 },
+      visible: false,
+    });
 
     const crosshairHandler = (param: MouseEventParams<Time>) => {
-      if ( param.point === undefined || param.time === undefined ) return;
-      const timeMs = param.time as number;
+      if (param.point === undefined || param.time === undefined) return;
+      const timeMs = (param.time as number) * 1000;
       const candle = candleMapRef.current.get(timeMs) ?? null;
       const price = candle?.close ?? 0;
       onCrosshair?.({ time: timeMs, price, candle });
     };
     chart.subscribeCrosshairMove(crosshairHandler);
 
-    // Chart is created when the module-level `applyData` is not yet in
-    // scope, so we rely on the `[data.candles]` effect to populate data.
-    // The effect below will run immediately after mount.
     return () => {
       chart.unsubscribeCrosshairMove(crosshairHandler);
       chart.remove();
@@ -139,18 +133,19 @@ export function LightweightChart({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // --- Update displayed data (range change / symbol change / refresh). ---
   useEffect(() => {
     applyData(chartRef.current ?? undefined, {
       candles: data.candles,
       indicators,
+      volumeVisible,
+      height,
       candleMap: candleMapRef,
       candlestick: candlestickRef,
       volume: volumeRef,
       indicatorRefs,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.candles, data.symbol, indicators]);
+  }, [data.candles, data.symbol, indicators, volumeVisible, height]);
 
   return (
     <div
@@ -165,21 +160,16 @@ export function LightweightChart({
   );
 }
 
-/**
- * Apply/layout the current dataset and indicators onto an existing
- * Lightweight Charts instance (created at mount). Safe to call on every
- * range/symbol change.
- */
-/** Map a Candle to lightweight-charts candlestick data. */
-const candleData = (c: Candle) => ({ time: c.time as Time, open: c.open, high: c.high, low: c.low, close: c.close });
-/** Map a Candle to lightweight-charts volume (bar) data. */
-const volumeData = (c: Candle) => ({ time: c.time as Time, value: c.volume });
+const candleData = (c: Candle) => ({ time: toChartTime(c.time), open: c.open, high: c.high, low: c.low, close: c.close });
+const volumeData = (c: Candle) => ({ time: toChartTime(c.time), value: c.volume, color: c.close >= c.open ? "#2DDDBF" : "#FF5200" });
 
 function applyData(
   chart: IChartApi | undefined,
   {
     candles,
     indicators,
+    volumeVisible,
+    height,
     candleMap,
     candlestick,
     volume,
@@ -187,55 +177,100 @@ function applyData(
   }: {
     candles: Candle[];
     indicators: IndicatorSeries[];
-    candleMap: React.MutableRefObject<Map<number, Candle>>;
-    candlestick: React.MutableRefObject<CandlestickSeriesApi | null>;
-    volume: React.MutableRefObject<BarSeriesApi | null>;
-    indicatorRefs: React.MutableRefObject<Map<string, LineSeriesApi>>;
+    volumeVisible: boolean;
+    height: number;
+    candleMap: MutableRefObject<Map<number, Candle>>;
+    candlestick: MutableRefObject<CandlestickSeriesApi | null>;
+    volume: MutableRefObject<BarSeriesApi | null>;
+    indicatorRefs: MutableRefObject<Map<string, IndicatorApi>>;
   },
 ) {
-  if ( !chart ) return;
+  if (!chart) return;
 
   const candlesSafe = candles ?? [];
   candleMap.current = new Map(candlesSafe.map((c) => [c.time, c]));
 
   const candleSeries = candlestick.current;
   const volumeSeries = volume.current;
-  if ( candleSeries ) candleSeries.setData(candlesSafe.map(candleData));
-  if ( volumeSeries ) volumeSeries.setData(candlesSafe.map(volumeData));
-
-  const enabledIds = new Set(indicators.map((s) => s.id));
-  const knownIds = new Set(indicatorRefs.current.keys());
-
-  // Remove series that are no longer enabled.
-  for ( const id of [...knownIds].filter((id) => !enabledIds.has(id as IndicatorId)) ) {
-    const series = indicatorRefs.current.get(id);
-    if ( series ) { chart.removeSeries(series); indicatorRefs.current.delete(id); }
+  if (candleSeries) candleSeries.setData(candlesSafe.map(candleData));
+  if (volumeSeries) {
+    if (volumeVisible) volumeSeries.setData(candlesSafe.map(volumeData));
+    else volumeSeries.setData([]);
   }
 
-  // Add / update enabled series.
-  for ( const series of indicators ) {
-    if ( knownIds.has(series.id) ) {
-      const ref = indicatorRefs.current.get(series.id)!;
-      ref.setData(candlesSafe.map((_, i) => series.data[i] ?? null).filter((v): v is number => v !== null).map((v, i) => ({ time: candlesSafe[i].time as Time, value: v })));
-      continue;
-    }
-    const line = chart.addSeries(LineSeries, {
-      priceFormat: { type: "price", precision: 2 },
-      color: series.color,
-      lineWidth: 2,
-      lastValueVisible: false,
-      crosshairMarkerVisible: true,
-      crosshairMarkerRadius: 3,
-      title: series.label,
-    });
-    indicatorRefs.current.set(series.id, line);
-    const dataItems = candlesSafe.map((_, i) => {
-      const v = series.data[i];
-      return v === null ? null : { time: candlesSafe[i].time as Time, value: v };
-    }).filter((item): item is { time: Time; value: number } => item !== null);
-    line.setData(dataItems);
+  const rsiNeeded = indicators.some((s) => s.pane === "rsi");
+  const macdNeeded = indicators.some((s) => s.pane === "macd");
+
+  for (const api of indicatorRefs.current.values()) {
+    chart.removeSeries(api as ISeriesApi<"Line", Time>);
+  }
+  indicatorRefs.current.clear();
+
+  while (chart.panes().length > 1) {
+    chart.removePane(chart.panes().length - 1);
+  }
+
+  const paneIndexFor: Record<IndicatorPane, number> = { price: 0, rsi: 0, macd: 0 };
+  if (rsiNeeded) {
+    chart.addPane();
+    paneIndexFor.rsi = chart.panes().length - 1;
+    const rsiScale = chart.priceScale("right", paneIndexFor.rsi);
+    rsiScale.applyOptions({ autoScale: false, scaleMargins: { top: 0.1, bottom: 0.1 } });
+    rsiScale.setAutoScale(false);
+    rsiScale.setVisibleRange({ from: 0, to: 100 });
+  }
+  if (macdNeeded) {
+    chart.addPane();
+    paneIndexFor.macd = chart.panes().length - 1;
+  }
+
+  const pricePane = chart.panes()[0];
+  const extraCount = (rsiNeeded ? 1 : 0) + (macdNeeded ? 1 : 0);
+  if (extraCount === 0) {
+    pricePane.setHeight(height);
+  } else if (extraCount === 1) {
+    pricePane.setHeight(Math.round(height * 0.7));
+    chart.panes()[1].setHeight(Math.round(height * 0.3));
+  } else {
+    pricePane.setHeight(Math.round(height * 0.6));
+    chart.panes()[1].setHeight(Math.round(height * 0.2));
+    chart.panes()[2].setHeight(Math.round(height * 0.2));
+  }
+
+  for (const series of indicators) {
+    const paneIndex = paneIndexFor[series.pane] ?? 0;
+    const precision = series.precision ?? 2;
+    const opts =
+      series.render === "histogram"
+        ? {
+            color: series.color,
+            priceFormat: { type: "price" as const, precision },
+            base: 0,
+            title: series.label,
+            lastValueVisible: false,
+          }
+        : {
+            color: series.color,
+            lineWidth: 2,
+            priceFormat: { type: "price" as const, precision },
+            lastValueVisible: false,
+            crosshairMarkerVisible: true,
+            crosshairMarkerRadius: 3,
+            title: series.label,
+          };
+    const def = series.render === "histogram" ? HistogramSeries : LineSeries;
+    const api = chart.addSeries(def, opts, paneIndex);
+    indicatorRefs.current.set(series.id, api as IndicatorApi);
+
+    const items = candlesSafe
+      .map((c, i) => {
+        const v = series.data[i];
+        if (v === null || v === undefined || !Number.isFinite(v)) return null;
+        return { time: toChartTime(c.time), value: v };
+      })
+      .filter((x): x is { time: Time; value: number } => x !== null);
+    (api as { setData: (d: { time: Time; value: number }[]) => void }).setData(items);
   }
 
   chart.timeScale().fitContent();
 }
-

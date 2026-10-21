@@ -20,7 +20,12 @@ export const INDICATOR_COLORS: Record<string, string> = {
   ema: "#14B8A6",
   rsi: "#F97316",
   macd: "#6366F1",
+  "macd-signal": "#A5B4FC",
+  "macd-hist": "#FB923C",
   bb: "#94A3B8",
+  "bb-upper": "#94A3B8",
+  "bb-middle": "#CBD5E1",
+  "bb-lower": "#94A3B8",
 };
 
 export interface MacdResult {
@@ -185,19 +190,21 @@ export function calculateIndicators(
   for ( const cfg of configs ) {
     if ( !cfg.enabled ) continue;
     if ( cfg.id === "sma" ) {
-      series.push({ id: "sma", label: cfg.label, color: INDICATOR_COLORS.sma, data: sma(values, cfg.period) });
+      series.push({ id: "sma", label: cfg.label, color: INDICATOR_COLORS.sma, data: sma(values, cfg.period), pane: "price", render: "line", scale: null, precision: 2 });
     } else if ( cfg.id === "ema" ) {
-      series.push({ id: "ema", label: cfg.label, color: INDICATOR_COLORS.ema, data: ema(values, cfg.period) });
+      series.push({ id: "ema", label: cfg.label, color: INDICATOR_COLORS.ema, data: ema(values, cfg.period), pane: "price", render: "line", scale: null, precision: 2 });
     } else if ( cfg.id === "rsi" ) {
-      series.push({ id: "rsi", label: cfg.label, color: INDICATOR_COLORS.rsi, data: rsi(values, cfg.period) });
+      series.push({ id: "rsi", label: cfg.label, color: INDICATOR_COLORS.rsi, data: rsi(values, cfg.period), pane: "rsi", render: "line", scale: { min: 0, max: 100 }, precision: 2 });
     } else if ( cfg.id === "macd" ) {
       const r = macd(values, cfg.fast, cfg.slow, cfg.signal);
-      series.push({ id: "macd", label: cfg.label, color: INDICATOR_COLORS.macd, data: r.macd });
-      series.push({ id: "macd-signal", label: "MACD signal", color: "#A5B4FC", data: r.signal });
-      series.push({ id: "macd-hist", label: "MACD histogram", color: "#FB923C", data: r.histogram });
+      series.push({ id: "macd", label: cfg.label, color: INDICATOR_COLORS.macd, data: r.macd, pane: "macd", render: "line", scale: null, precision: 3 });
+      series.push({ id: "macd-signal", label: "MACD signal", color: "#A5B4FC", data: r.signal, pane: "macd", render: "line", scale: null, precision: 3 });
+      series.push({ id: "macd-hist", label: "MACD histogram", color: "#FB923C", data: r.histogram, pane: "macd", render: "histogram", scale: null, precision: 3 });
     } else if ( cfg.id === "bb" ) {
       const r = bollingerBands(values, cfg.period, cfg.k);
-      series.push({ id: "bb", label: cfg.label, color: INDICATOR_COLORS.bb, data: r.upper });
+      series.push({ id: "bb-upper", label: `${cfg.label} upper`, color: INDICATOR_COLORS.bb, data: r.upper, pane: "price", render: "line", scale: null, precision: 2 });
+      series.push({ id: "bb-middle", label: `${cfg.label} middle`, color: "#CBD5E1", data: r.middle, pane: "price", render: "line", scale: null, precision: 2 });
+      series.push({ id: "bb-lower", label: `${cfg.label} lower`, color: INDICATOR_COLORS.bb, data: r.lower, pane: "price", render: "line", scale: null, precision: 2 });
     }
   }
   return series;

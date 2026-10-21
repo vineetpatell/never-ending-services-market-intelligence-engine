@@ -96,11 +96,16 @@ export const useChartStore = create<ChartStore>((set, get) => ({
     if ( st.loading ) return;
     set({ loading: true, error: null });
     try {
-      const ds = await createDemoProvider().getHistory(st.createChartQuery());
+      const provider = createDemoProvider();
+      // Use the provider's TRUE available range (not the filtered window)
+      // so timeframe anchors and custom-date inputs reflect the full dataset.
+      const range = provider.getAvailableRange(st.symbol, st.exchange);
+      const query = st.createChartQuery();
+      const ds = await provider.getHistory(query);
       set({
         candles: ds.candles,
-        availableFrom: ds.availableStart,
-        availableTo: ds.availableEnd,
+        availableFrom: range ? range.from : ds.availableStart,
+        availableTo: range ? range.to : ds.availableEnd,
         status: ds.status as "DEMO",
         isLive: ds.isLive as false,
         error: null,
