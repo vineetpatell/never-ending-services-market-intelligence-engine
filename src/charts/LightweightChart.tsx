@@ -2,13 +2,14 @@ import { useEffect, useRef } from "react";
 import type { MutableRefObject, ReactNode } from "react";
 import type { Candle, ChartDataSet, IndicatorPane, IndicatorSeries } from "./types";
 import { formatISODate } from "./date";
+import { isCandleLike } from "./validation";
+import { toChartTime, candleSeriesData, volumeSeriesData } from "./chartSeriesData";
 
 import {
   ColorType,
   CrosshairMode,
   createChart,
   LineStyle,
-  BarSeries,
   CandlestickSeries,
   HistogramSeries,
   IChartApi,
@@ -19,7 +20,7 @@ import {
 } from "lightweight-charts";
 
 type CandlestickSeriesApi = ISeriesApi<"Candlestick">;
-type BarSeriesApi = ISeriesApi<"Bar">;
+type VolumeSeriesApi = ISeriesApi<"Histogram">;
 type IndicatorApi = ISeriesApi<"Line" | "Histogram", Time>;
 
 interface LightweightChartProps {
@@ -32,7 +33,6 @@ interface LightweightChartProps {
   overlay?: ReactNode;
 }
 
-const toChartTime = (ms: number): Time => Math.floor(ms / 1000) as Time;
 
 export function LightweightChart({
   data,
@@ -46,7 +46,7 @@ export function LightweightChart({
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candlestickRef = useRef<CandlestickSeriesApi | null>(null);
-  const volumeRef = useRef<BarSeriesApi | null>(null);
+  const volumeRef = useRef<VolumeSeriesApi | null>(null);
   const indicatorRefs = useRef<Map<string, IndicatorApi>>(new Map());
   const candleMapRef = useRef<Map<number, Candle>>(new Map());
 
@@ -102,7 +102,7 @@ export function LightweightChart({
     });
     candlestickRef.current = candlestick;
 
-    const volume = chart.addSeries(BarSeries, {
+    const volume = chart.addSeries(HistogramSeries, {
       priceScaleId: "volume",
       priceFormat: { type: "volume" },
       title: "Volume",
@@ -160,8 +160,7 @@ export function LightweightChart({
   );
 }
 
-const candleData = (c: Candle) => ({ time: toChartTime(c.time), open: c.open, high: c.high, low: c.low, close: c.close });
-const volumeData = (c: Candle) => ({ time: toChartTime(c.time), value: c.volume, color: c.close >= c.open ? "#2DDDBF" : "#FF5200" });
+
 
 function applyData(
   chart: IChartApi | undefined,
@@ -181,20 +180,28 @@ function applyData(
     height: number;
     candleMap: MutableRefObject<Map<number, Candle>>;
     candlestick: MutableRefObject<CandlestickSeriesApi | null>;
-    volume: MutableRefObject<BarSeriesApi | null>;
+    volume: MutableRefObject<VolumeSeriesApi | null>;
     indicatorRefs: MutableRefObject<Map<string, IndicatorApi>>;
   },
 ) {
   if (!chart) return;
 
   const candlesSafe = candles ?? [];
-  candleMap.current = new Map(candlesSafe.map((c) => [c.time, c]));
+  const validCandles = candlesSafe.filter(isCandleLike);
+  const invalidCount = candlesSafe.length - validCandles.length;
+  if (invalidCount > 0) {
+    console.warn(
+      `LightweightChart: skipped ${invalidCount} invalid candle(s) out of ${candlesSafe.length}; ` +
+        `only candles with finite OHLC, valid price relationships, non-negative volume, and increasing timestamps are rendered.`,
+    );
+  }
+  candleMap.current = new Map(validCandles.map((c) => [c.time, c]));
 
   const candleSeries = candlestick.current;
   const volumeSeries = volume.current;
-  if (candleSeries) candleSeries.setData(candlesSafe.map(candleData));
+  if (candleSeries) candleSeries.setData(validCandles.map(candleSeriesData));
   if (volumeSeries) {
-    if (volumeVisible) volumeSeries.setData(candlesSafe.map(volumeData));
+    if (volumeVisible) volumeSeries.setData(validCandles.map(volumeSeriesData));
     else volumeSeries.setData([]);
   }
 
@@ -263,7 +270,9 @@ function applyData(
     indicatorRefs.current.set(series.id, api as IndicatorApi);
 
     const items = candlesSafe
-      .map((c, i) => {
+      .map((c, i) => ({ c, i }))
+      .filter(({ c }) => isCandleLike(c))
+      .map(({ c, i }) => {
         const v = series.data[i];
         if (v === null || v === undefined || !Number.isFinite(v)) return null;
         return { time: toChartTime(c.time), value: v };

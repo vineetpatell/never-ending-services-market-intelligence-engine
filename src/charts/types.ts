@@ -16,10 +16,10 @@ export type Exchange = "NSE" | "BSE";
 export type Currency = "INR";
 
 /** Freshness/providence state carried by every dataset and candle. */
-export type DataStatus = "DEMO" | "DELAYED" | "LIVE";
+export type DataStatus = "DEMO" | "IMPORTED" | "DELAYED" | "LIVE";
 
 /** Fixed provenance tag for synthetic fixtures. */
-export type DataSource = "DEMO_DATA";
+export type DataSource = "DEMO_DATA" | "IMPORTED_CSV" | "BACKEND_API";
 
 /** Identifier for a symbol as shown in the picker. */
 export interface SymbolRecord {
@@ -240,7 +240,7 @@ export interface IndicatorValueRow {
  * this phase; a future backend adapter implements the same interface.
  */
 export interface MarketDataProvider {
-  getSymbols(): SymbolRecord[];
+  getSymbols(): SymbolRecord[] | Promise<SymbolRecord[]>;
   getHistory(query: ChartDataQuery): Promise<ChartDataSet>;
   getAvailableRange(symbol: string, exchange: Exchange): { from: number; to: number } | null;
   isDemo(): boolean;

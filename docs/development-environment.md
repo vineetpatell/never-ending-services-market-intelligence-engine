@@ -54,6 +54,13 @@ market/policy value shows DEMO labelling.
 - `npm test` — Vitest (jsdom) over `src/charts/__tests__/`.
 - `npm run build` — `tsc -b && vite build`.
 
+## Backend verification (Phase 5, 2026-10-21)
+
+- Python 3.11 was NOT available; used system Python 3.10.11 in `.venv` (no global changes).
+- Backend tests: `cd backend && ..\.venv\Scripts\python.exe -m pytest -q` → 18 passed.
+- Backend run: `cd backend && ..\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000`.
+- Health check: `GET http://127.0.0.1:8000/api/v1/health` → `{"status":"ok","version":"0.1.0","database":"ok"}`.
+- Frontend gates still pass: lint 0, typecheck 0, 36/36 tests, build success.
 All four must pass before a change is considered done.
 
 ## Reproducibility rule

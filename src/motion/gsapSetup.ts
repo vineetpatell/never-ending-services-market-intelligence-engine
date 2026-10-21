@@ -22,15 +22,16 @@ export function useGsapPlugins(): void {
  */
 export function useGsapDemo(
   scope: React.RefObject<HTMLElement | null>,
-  create: (ctx: gsap.Context) => void | (() => void),
+  create: (ctx?: gsap.Context) => void | (() => void),
   deps: React.DependencyList = [],
   disabled = false,
 ): void {
   useEffect(() => {
-    if (disabled || !scope.current) return;
+    const element = scope.current;
+    if (disabled || !element) return;
     const ctx = gsap.context(() => {
-      create(ctx);
-    }, scope);
+      create();
+    }, element);
     return () => ctx.revert();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [disabled, ...deps]);

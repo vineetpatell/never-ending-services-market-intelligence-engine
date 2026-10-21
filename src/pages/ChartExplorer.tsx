@@ -8,6 +8,7 @@ import {
 import { IndicatorValues } from "./IndicatorValues";
 import { LightweightChart } from "../charts/LightweightChart";
 import { useChartStore } from "../charts/store";
+import { isCandleLike } from "../charts/validation";
 import {
   type Candle,
   type ChartDataSet,
@@ -29,6 +30,7 @@ import {
   availableRangeText,
 } from "../charts/date";
 import { createDemoProvider } from "../charts/provider";
+import { createBackendProvider } from "../charts/backendProvider";
 
 const DEMO_BADGE_CLASS =
   "inline-flex items-center gap-1.5 rounded-full border border-[var(--color-nes-accent)]/40 bg-[var(--color-nes-accent)]/15 px-3 py-1 text-xs font-bold tracking-wide text-[var(--color-nes-accent)]";
@@ -101,15 +103,45 @@ export function ChartExplorerPage() {
     volumeVisible,
     loading,
     error,
+    backendError,
+    providerKind,
     setSymbol,
     setTimeframe,
     setCustomRange,
     setIndicators,
     toggleVolume,
+    setProviderKind,
+    useDemoData,
     refresh,
   } = store;
 
-  const [symbols] = useState<SymbolRecord[]>(() => createDemoProvider().getSymbols());
+  const [symbols, setSymbols] = useState<SymbolRecord[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (providerKind !== "backend") {
+        await Promise.resolve();
+        if (!cancelled) setSymbols(createDemoProvider().getSymbols() as SymbolRecord[]);
+        return;
+      }
+      try {
+        const syms = await createBackendProvider().getSymbols();
+        if (!cancelled) setSymbols(syms as SymbolRecord[]);
+      } catch {
+        if (!cancelled) setSymbols([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [providerKind]);
+
+  useEffect(() => {
+    if (symbols.length > 0 && !symbols.some((s) => s.symbol === symbol && s.exchange === exchange)) {
+      setSymbol(symbols[0].symbol, symbols[0].exchange);
+    }
+  }, [symbols, symbol, exchange, setSymbol]);
   const [customFrom, setCustomFrom] = useState<string>("");
   const [customTo, setCustomTo] = useState<string>("");
   const [crosshair, setCrosshair] = useState<{
@@ -176,7 +208,8 @@ export function ChartExplorerPage() {
     refresh();
   }, [symbol, exchange, timeframe, fromMs, toMs, refresh]);
 
-  const showEmpty = !loading && !error && candles.length === 0;
+  const allInvalid = candles.length > 0 && candles.every((c) => !isCandleLike(c));
+  const showEmpty = !loading && !error && (candles.length === 0 || allInvalid);
   const showLoading = loading && candles.length === 0;
 
   const data: ChartDataSet = {
@@ -194,12 +227,39 @@ export function ChartExplorerPage() {
 
   return (
     <div className="flex flex-col gap-5">
+      {backendError && (
+        <Card className="border-[var(--color-nes-down)]/40 px-4 py-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span className="text-sm text-[var(--color-nes-down)]">
+              Backend unavailable: {backendError}. No synthetic data was substituted.
+            </span>
+            <Button variant="ghost" onClick={useDemoData}>
+              Use demo data
+            </Button>
+          </div>
+        </Card>
+      )}
+
+      <div className="flex items-center gap-2">
+        <span className="text-xs font-semibold uppercase tracking-wide text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)]">
+          Data source
+        </span>
+        <select
+          value={providerKind}
+          onChange={(e) => setProviderKind(e.target.value as "demo" | "backend")}
+          className="rounded border border-[var(--color-nes-line)] bg-transparent px-2 py-1 text-xs nes-dark:border-[var(--color-nes-d-line)]"
+        >
+          <option value="demo">Demo (synthetic)</option>
+          <option value="backend">Backend (imported)</option>
+        </select>
+      </div>
+
       <PageHeader
         title="Chart Explorer"
         description={
           <>
             Demo candlestick explorer with provider-independent data contracts.{" "}
-            <span className={DEMO_BADGE_CLASS}>DEMO</span>
+            <span className={DEMO_BADGE_CLASS}>{status}</span>
           </>
         }
         actions={
@@ -401,7 +461,7 @@ export function ChartExplorerPage() {
               </span>
               <span className="h-2 w-2 rounded-full bg-current" />
               <span className="text-xs font-bold tracking-wide text-[var(--color-nes-accent)]">
-                DEMO
+                {status}
               </span>
               <span className="text-xs text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)]">
                 {isLive ? "LIVE" : "NOT LIVE"}

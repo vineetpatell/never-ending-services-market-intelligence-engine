@@ -2,10 +2,13 @@ import { create } from "zustand";
 import { FIXED_TODAY_IST } from "./demo";
 import { istMidnight } from "./date";
 import { createDemoProvider } from "./provider";
+import { createBackendProvider, fetchBackendDataStatus } from "./backendProvider";
 import { toTimeframeRange } from "./timeframes";
 import type {
   Candle,
   ChartDataQuery,
+  DataStatus,
+  DataSource,
   Exchange,
   IndicatorConfig,
   TimeframeId,
@@ -21,9 +24,11 @@ export interface ChartState {
   candles: Candle[];
   availableFrom: number;
   availableTo: number;
-  status: "DEMO";
-  source: "DEMO_DATA";
-  isLive: false;
+  status: DataStatus;
+  source: DataSource;
+  isLive: boolean;
+  providerKind: "demo" | "backend";
+  backendError: string | null;
   indicators: IndicatorConfig[];
   volumeVisible: boolean;
   loading: boolean;
@@ -38,6 +43,8 @@ export interface ChartActions {
   setIndicators: (indicators: IndicatorConfig[]) => void;
   toggleVolume: () => void;
   resetRange: () => void;
+  setProviderKind: (kind: "demo" | "backend") => void;
+  useDemoData: () => void;
   createChartQuery: () => ChartDataQuery;
   refresh: () => Promise<void>;
 }
@@ -56,6 +63,8 @@ export const useChartStore = create<ChartStore>((set, get) => ({
   status: "DEMO",
   source: "DEMO_DATA",
   isLive: false,
+  providerKind: "demo",
+  backendError: null,
   indicators: [
     { id: "sma", label: "SMA 20", enabled: false, period: 20 },
     { id: "ema", label: "EMA 20", enabled: false, period: 20 },
@@ -82,6 +91,12 @@ export const useChartStore = create<ChartStore>((set, get) => ({
 
   resetRange: () => set({ timeframe: "1Y", fromMs: null, toMs: null }),
 
+  setProviderKind: (providerKind) =>
+    set({ providerKind, backendError: null, candles: [], loading: false, error: null }),
+
+  useDemoData: () =>
+    set({ providerKind: "demo", backendError: null, error: null }),
+
   createChartQuery: () => {
     const { symbol, exchange, timeframe, fromMs, toMs, availableTo } = get();
     if ( timeframe === "custom" ) {
@@ -94,25 +109,47 @@ export const useChartStore = create<ChartStore>((set, get) => ({
   refresh: async () => {
     const st = get();
     if ( st.loading ) return;
-    set({ loading: true, error: null });
+    set({ loading: true, error: null, backendError: null });
     try {
-      const provider = createDemoProvider();
-      // Use the provider's TRUE available range (not the filtered window)
-      // so timeframe anchors and custom-date inputs reflect the full dataset.
-      const range = provider.getAvailableRange(st.symbol, st.exchange);
-      const query = st.createChartQuery();
-      const ds = await provider.getHistory(query);
-      set({
-        candles: ds.candles,
-        availableFrom: range ? range.from : ds.availableStart,
-        availableTo: range ? range.to : ds.availableEnd,
-        status: ds.status as "DEMO",
-        isLive: ds.isLive as false,
-        error: null,
-        loading: false,
-      });
-    } catch {
-      set({ error: "Unable to load demo chart data. Retry.", loading: false });
+      if ( st.providerKind === "backend" ) {
+        const provider = createBackendProvider();
+        const range = await fetchBackendDataStatus(st.symbol, st.exchange);
+        const query = st.createChartQuery();
+        const ds = await provider.getHistory(query);
+        set({
+          candles: ds.candles,
+          availableFrom: range?.first_ts ?? ds.availableStart,
+          availableTo: range?.last_ts ?? ds.availableEnd,
+          status: ds.status,
+          source: ds.source,
+          isLive: ds.isLive,
+          error: null,
+          backendError: null,
+          loading: false,
+        });
+      } else {
+        const provider = createDemoProvider();
+        const range = provider.getAvailableRange(st.symbol, st.exchange);
+        const query = st.createChartQuery();
+        const ds = await provider.getHistory(query);
+        set({
+          candles: ds.candles,
+          availableFrom: range ? range.from : ds.availableStart,
+          availableTo: range ? range.to : ds.availableEnd,
+          status: ds.status,
+          source: ds.source,
+          isLive: ds.isLive,
+          error: null,
+          loading: false,
+        });
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Unable to load chart data.";
+      if ( st.providerKind === "backend" ) {
+        set({ backendError: msg, loading: false });
+      } else {
+        set({ error: "Unable to load demo chart data. Retry.", loading: false });
+      }
     }
   },
 }));
