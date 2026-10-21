@@ -1,5 +1,4 @@
-ï»¿import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import {
   Button,
   Card,
@@ -10,9 +9,9 @@ import { IndicatorValues } from "./IndicatorValues";
 import { LightweightChart } from "../charts/LightweightChart";
 import {
   useChartStore,
+  type Candle,
   type ChartDataQuery,
   type ChartDataSet,
-  type Candle,
   type Exchange,
   type IndicatorConfig,
   type IndicatorSeries,
@@ -42,49 +41,50 @@ function paramsText(cfg: IndicatorConfig): string {
     case "rsi":
       return `period ${cfg.period}`;
     case "macd":
-return `fast ${cfg.fast} Â· slow ${cfg.slow} Â· signal ${cfg.signal}`;
+      return `fast ${cfg.fast} · slow ${cfg.slow} · signal ${cfg.signal}`;
     case "bb":
-      return `period ${cfg.period} Â· k ${cfg.k}`;
+      return `period ${cfg.period} · k ${cfg.k}`;
     default:
       return "";
   }
 }
 
-function latestValue(
-  series: IndicatorSeries,
-  candles: Candle[],
-): string | null {
+function latestValue(series: IndicatorSeries): string | null {
   const data = series.data;
   for (let i = data.length - 1; i >= 0; i--) {
     const v = data[i];
     if (v !== null && v !== undefined) {
-      return v.toFixed(2);
+      return v.toFixed(series.precision ?? 2);
     }
   }
   return null;
 }
 
+function unitFor(series: IndicatorSeries): string {
+  if (series.pane === "rsi") return "0–100";
+  if (series.pane === "macd") return "line/hist";
+  return "price";
+}
+
 function buildIndicatorRows(
-  indicators: IndicatorSeries[],
-  candles: Candle[],
-): { rows: IndicatorValueRow[] } {
-  const rows: IndicatorValueRow[] = indicators.map((s) => {
-    const latest = latestValue(s, candles);
+  series: IndicatorSeries[],
+  configs: IndicatorConfig[],
+): IndicatorValueRow[] {
+  return series.map((s) => {
+    const cfg = configs.find((c) => c.id === s.id);
     return {
       id: s.id,
       label: s.label,
       color: s.color,
-      params: paramsText(
-        indicators.find((i) => i.id === s.id) as IndicatorConfig,
-      ),
-      latest: latest ?? "â€”",
+      params: cfg ? paramsText(cfg) : "",
+      latest: latestValue(s) ?? "—",
+      pane: s.pane,
+      unit: unitFor(s),
     };
   });
-  return { rows };
 }
 
 export function ChartExplorerPage() {
-  const navigate = useNavigate();
   const store = useChartStore();
   const {
     symbol,
@@ -134,9 +134,9 @@ export function ChartExplorerPage() {
     [candles, enabledIndicators],
   );
 
-  const { rows } = useMemo(
-    () => buildIndicatorRows(indicatorSeries, candles),
-    [indicatorSeries, candles],
+  const rows = useMemo(
+    () => buildIndicatorRows(indicatorSeries, indicators),
+    [indicatorSeries, indicators],
   );
 
   const timeframeOptions = useMemo(
@@ -166,14 +166,38 @@ export function ChartExplorerPage() {
     setCustomRange(f, t);
   };
 
-  const query: ChartDataQuery = {
-    symbol,
-    exchange,
-    fromMs: timeframe === "custom" ? (fromMs ?? null) : null,
-    toMs: timeframe === "custom" ? (toMs ?? null) : null,
+  const toggleIndicator = (id: string) => {
+    setIndicators(
+      indicators.map((c) => (c.id === id ? { ...c, enabled: !c.enabled } : c)),
+    );
+  };
+
+  const setPeriod = (id: string, patch: Partial<IndicatorConfig>) => {
+    setIndicators(
+      indicators.map((c) => (c.id === id ? { ...c, ...patch } : c)),
+    );
   };
 
   useEffect(() => {
+    refresh();
+  }, [symbol, exchange, timeframe, fromMs, toMs, refresh]);
+
+  const showEmpty = !loading && !error && candles.length === 0;
+  const showLoading = loading && candles.length === 0;
+
+  const data: ChartDataSet = {
+    symbol,
+    exchange,
+    candles,
+    source,
+    status,
+    isLive,
+    lastUpdatedAt: Date.now(),
+    note: "All values synthetic — demo only.",
+    availableStart: availableFrom,
+    availableEnd: availableTo,
+  };
+
   return (
     <div className="flex flex-col gap-5">
       <PageHeader
@@ -186,7 +210,7 @@ export function ChartExplorerPage() {
         }
         actions={
           <Button variant="ghost" onClick={() => refresh()} disabled={loading}>
-            {loading ? "Loadingâ€¦" : "Refresh"}
+            {loading ? "Loading…" : "Refresh"}
           </Button>
         }
       />
@@ -244,7 +268,7 @@ export function ChartExplorerPage() {
           </div>
         </div>
         {timeframe === "custom" && (
-          <div className="px-4 py-2 border-b border-[var(--color-nes-line)] nes-dark:border-[var(--color-nes-d-line)] flex items-center gap-4">
+          <div className="px-4 py-2 border-b border-[var(--color-nes-line)] nes-dark:border-[var(--color-nes-d-line)] flex items-center gap-4 flex-wrap">
             <label className="text-xs font-semibold text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)]">
               From
             </label>
@@ -279,41 +303,85 @@ export function ChartExplorerPage() {
 
         <div className="px-4 py-3 relative">
           {showLoading && (
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40">
-              <div className="flex flex-col items-center gap-2 text-xs text-[var(--color-nes-ink-2)]">
-                Loading demo dataâ€¦
-              </div>
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 text-white">
+              Loading demo data…
             </div>
           )}
           {showEmpty && (
-            <div className="flex flex-col items-center justify-center h-full text-center py-10">
-              <EmptyState
-                title="No chart data"
-                description="Select a symbol and timeframe to load demo data."
-              />
-            </div>
-          )}
-          {!showLoading && !showEmpty && (
-            <LightweightChart
-              data={data}
-              indicators={indicatorSeries}
-              height={520}
-              onCrosshair={setCrosshair}
+            <EmptyState
+              title="No data"
+              body="No demo candles available for the selected range."
             />
           )}
+          {error && (
+            <div className="flex items-center justify-between gap-3 rounded-lg border border-[var(--color-nes-down)]/40 bg-[var(--color-nes-down)]/10 px-3 py-2 text-sm">
+              <span>{error}</span>
+              <Button variant="ghost" onClick={() => refresh()}>
+                Retry
+              </Button>
+            </div>
+          )}
+          <LightweightChart
+            data={data}
+            indicators={indicatorSeries}
+            volumeVisible={volumeVisible}
+            onCrosshair={setCrosshair}
+          />
         </div>
-        {error && (
-          <div className="px-4 py-3 bg-[var(--color-nes-down)]/10 border border-[var(--color-nes-down)]/30 rounded-xl text-[var(--color-nes-down)] text-sm">
-            {error}
-            <Button
-              variant="ghost"
-              onClick={refresh}
-              className="ml-3 h-8 px-2 text-[var(--color-nes-down)]"
-            >
-              Retry
-            </Button>
+      </Card>
+
+      <Card>
+        <div className="px-4 py-3 border-b border-[var(--color-nes-line)] nes-dark:border-[var(--color-nes-d-line)] flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold">Indicators</h3>
+            <p className="mt-1 text-xs text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)]">
+              Toggle indicators and adjust parameters. Values are computed from available history only.
+            </p>
           </div>
-        )}
+          <Button variant="ghost" onClick={toggleVolume}>
+            {volumeVisible ? "Hide volume" : "Show volume"}
+          </Button>
+        </div>
+        <div className="px-4 py-3 flex flex-wrap gap-4">
+          {indicators.map((cfg) => (
+            <div key={cfg.id} className="flex items-center gap-2 rounded-lg border border-[var(--color-nes-line)] nes-dark:border-[var(--color-nes-d-line)] px-3 py-2">
+              <input
+                type="checkbox"
+                checked={cfg.enabled}
+                onChange={() => toggleIndicator(cfg.id)}
+                aria-label={`Toggle ${cfg.label}`}
+              />
+              <span className="text-sm font-medium" style={{ color: INDICATOR_COLORS[cfg.id] }}>
+                {cfg.label}
+              </span>
+              {(cfg.id === "sma" || cfg.id === "ema" || cfg.id === "rsi" || cfg.id === "bb") && (
+                <input
+                  type="number"
+                  min={2}
+                  value={cfg.period}
+                  onChange={(e) => setPeriod(cfg.id, { period: Number(e.target.value) })}
+                  className="w-14 rounded border border-[var(--color-nes-line)] bg-transparent px-2 py-1 text-xs nes-dark:border-[var(--color-nes-d-line)]"
+                />
+              )}
+              {cfg.id === "macd" && (
+                <>
+                  <input type="number" min={2} value={cfg.fast} onChange={(e) => setPeriod(cfg.id, { fast: Number(e.target.value) })} className="w-12 rounded border border-[var(--color-nes-line)] bg-transparent px-2 py-1 text-xs nes-dark:border-[var(--color-nes-d-line)]" />
+                  <input type="number" min={2} value={cfg.slow} onChange={(e) => setPeriod(cfg.id, { slow: Number(e.target.value) })} className="w-12 rounded border border-[var(--color-nes-line)] bg-transparent px-2 py-1 text-xs nes-dark:border-[var(--color-nes-d-line)]" />
+                  <input type="number" min={2} value={cfg.signal} onChange={(e) => setPeriod(cfg.id, { signal: Number(e.target.value) })} className="w-12 rounded border border-[var(--color-nes-line)] bg-transparent px-2 py-1 text-xs nes-dark:border-[var(--color-nes-d-line)]" />
+                </>
+              )}
+              {cfg.id === "bb" && (
+                <input
+                  type="number"
+                  step="0.1"
+                  value={cfg.k}
+                  onChange={(e) => setPeriod(cfg.id, { k: Number(e.target.value) })}
+                  className="w-12 rounded border border-[var(--color-nes-line)] bg-transparent px-2 py-1 text-xs nes-dark:border-[var(--color-nes-d-line)]"
+                />
+              )}
+            </div>
+          ))}
+        </div>
       </Card>
 
       {crosshair && candles.length > 0 && (
@@ -335,7 +403,7 @@ export function ChartExplorerPage() {
             </div>
             <div className="flex items-center gap-3">
               <span className="text-xs font-semibold text-[var(--color-nes-ink-2)] nes-dark:text-[var(--color-nes-d-ink-2)]">
-                {status} Â· {source}
+                {status} · {source}
               </span>
               <span className="h-2 w-2 rounded-full bg-current" />
               <span className="text-xs font-bold tracking-wide text-[var(--color-nes-accent)]">
@@ -366,31 +434,9 @@ export function ChartExplorerPage() {
           Available range: {availableRangeText({
             availableStart: availableFrom,
             availableEnd: availableTo,
-          })} Â· {status === "DEMO" ? "Synthetic fixtures â€” not live data" : ""}
+          })} · {status === "DEMO" ? "Synthetic fixtures — not live data" : ""}
         </p>
       )}
     </div>
   );
 }
-        </div>
-        </div>
-    refresh();
-  }, [symbol, exchange, timeframe, fromMs, toMs, refresh]);
-
-  const showEmpty = !loading && !error && candles.length === 0;
-  const showLoading = loading && candles.length === 0;
-
-  const data: ChartDataSet = {
-    symbol,
-    exchange,
-    candles,
-    source,
-    status,
-    isLive,
-    lastUpdatedAt: Date.now(),
-    note: "All values synthetic â€” demo only.",
-    availableStart: availableFrom,
-    availableEnd: availableTo,
-  };
-
-
