@@ -1,9 +1,9 @@
 {
-  "name": "nes-ai-finance-insurance-platform",
+  "name": "nes-ai-finance-intelligence-platform",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "NES AI Finance & Insurance Intelligence Platform — local-first personal workspace (frontend foundation, Phase 1B)",
+  "description": "NES AI Finance Intelligence Platform — local-first personal workspace (frontend foundation, Phase 1B)",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5173",
     "build": "tsc -b && vite build",

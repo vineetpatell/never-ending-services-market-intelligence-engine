@@ -9,13 +9,12 @@ requirements baseline — guidance here never overrides them.
 ## 1. Product boundaries (hard stops)
 
 - Personal-use, local-first app. Historical NSE/BSE research + paper trading
-  only. Insurance = document assistance, comparison, renewals.
+  only. The insurance module was removed — see ADR-0008.
 - NEVER implement live broker order routing, auto-trading, insurance
   purchases/issuance, claims guarantees, or customer-facing regulated flows.
-- NEVER label demo/synthetic data as live. Every market/policy value carries
+- NEVER label demo/synthetic data as live. Every market value carries
   source, timestamp/freshness, and demo status (`is_live: false` where typed).
-- NEVER present simulated results as real, AI demo responses as model output,
-  or unverified OCR text as verified policy fact (review step required).
+- NEVER present simulated results as real or AI demo responses as model output.
 - NEVER send personal documents or queries to external services without explicit
   user approval and clear disclosure of what leaves the machine.
 
@@ -38,7 +37,7 @@ requirements baseline — guidance here never overrides them.
   components; no giant single-file components.
 - Justify every new dependency; explain large additions. Prefer the approved
   stack (see `docs/adr/`); anything else needs an ADR first.
-- Follow the hybrid theme (light dashboard/insurance, dark trading), Inter,
+- Follow the hybrid theme (light dashboard, dark trading), Inter,
   tabular numerals for money, and the tokens in doc 02.
 - Motion: CSS for simple, GSAP (+ScrollTrigger, with cleanup on unmount) for
   complex timelines; respect reduced-motion with static fallbacks; Three.js
@@ -62,7 +61,7 @@ requirements baseline — guidance here never overrides them.
 - `lint`, type-check, affected tests, and build pass (or failures reported
   precisely); regressions fixed.
 - No dead navigation, no inert primary controls, demo labels intact,
-  paper-trading-only banner intact, review-before-verified intact.
+  paper-trading-only banner intact.
 - Changelog/living docs updated when behaviour or setup changes; major choices
   recorded as ADRs under `docs/adr/`.
 - Summarise: files changed, tests run + outcomes, known limitations, manual

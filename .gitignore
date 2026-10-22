@@ -48,7 +48,7 @@ htmlcov/
 *.db-journal
 *.db-wal
 *.db-shm
-data/
+/data/
 backups/
 *.bak
 *.zip.bak

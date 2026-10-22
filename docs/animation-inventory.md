@@ -13,12 +13,12 @@ fallback, acceptance check. Implementable with GSAP + ScrollTrigger or CSS.
 ## A01 — Page transition wipe
 
 - Purpose: orient the user during primary-destination navigation (Home, Trading,
-  Insurance, Copilot, Library, Settings).
+  Copilot, Library, Settings).
 - Trigger: route change.
 - Expected behaviour: 220 ms ease-out content fade + 8 px rise; sidebar active
   state updates synchronously.
 - Reduced-motion fallback: instant swap, no fade/rise.
-- Acceptance: navigate all six destinations with reduced motion on — content
+- Acceptance: navigate all five destinations with reduced motion on — content
   swaps instantly, focus lands on the page heading.
 
 ## A02 — Card stagger entrance
@@ -69,10 +69,10 @@ fallback, acceptance check. Implementable with GSAP + ScrollTrigger or CSS.
 - Acceptance: banner text present before, during, and after the pulse; no
   element resembles a live brokerage ticket.
 
-## A07 — Policy field review highlight
+## A07 — Indicator status change highlight
 
-- Purpose: guide extraction review (unreviewed, corrected, verified).
-- Trigger: field status change in the vault review UI.
+- Purpose: guide indicator review when a signal or field status changes.
+- Trigger: status change on a quote/indicator row.
 - Expected behaviour: changed row flashes a subtle status tint for 400 ms,
   then settles to the steady status colour + text label (never colour-alone,
   per doc 02).
@@ -80,10 +80,10 @@ fallback, acceptance check. Implementable with GSAP + ScrollTrigger or CSS.
 - Acceptance: every status change is understandable with colour removed
   (grayscale check).
 
-## A08 — Comparison column sync
+## A08 — Watchlist column sync
 
-- Purpose: keep side-by-side policy comparison readable on scroll.
-- Trigger: horizontal scroll in Compare view.
+- Purpose: keep side-by-side quote comparison readable on scroll.
+- Trigger: horizontal scroll in the watchlist table.
 - Expected behaviour: sticky header + first column; scroll-linked shadow hints
   at overflow edges.
 - Reduced-motion fallback: sticky positioning only, no shadow animation.
@@ -112,7 +112,7 @@ fallback, acceptance check. Implementable with GSAP + ScrollTrigger or CSS.
 
 ## A11 — Skeleton shimmer (bounded)
 
-- Purpose: loading state for screener, quotes, and document processing.
+- Purpose: loading state for screener, quotes, and history processing.
 - Trigger: async fetch/process start.
 - Expected behaviour: subtle shimmer on skeleton blocks, capped at 3 cycles
   before falling back to a static skeleton + status text.

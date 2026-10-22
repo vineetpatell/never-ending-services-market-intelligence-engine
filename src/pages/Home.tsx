@@ -3,9 +3,7 @@ import {
   PAPER_CASH_START,
   demoActivity,
   demoBacktests,
-  demoPolicies,
   demoQuotes,
-  demoRenewals,
   formatINR,
   initialPaperOrders,
   initialWatchlist,
@@ -16,7 +14,6 @@ const KIND_LABEL: Record<string, string> = {
   research: "Research",
   backtest: "Backtest",
   paper: "Paper trade",
-  policy: "Policy",
   copilot: "Copilot",
 };
 
@@ -32,7 +29,6 @@ export function HomePage() {
   const valuation = valuePositions(positions, prices);
   const portfolioValue = PAPER_CASH_START + valuation.unrealised;
   const lastBacktest = demoBacktests[0];
-  const uncertainRenewals = demoRenewals.filter((r) => !r.certain).length;
 
   return (
     <div className="flex flex-col gap-5">
@@ -40,8 +36,9 @@ export function HomePage() {
         title="Dashboard"
         description={
           <>
-            Goal-first workspace for research, paper trading, and insurance
-            review. All values below are synthetic fixtures. <Badge>DEMO</Badge>
+            Goal-first workspace for market research, historical backtesting,
+            and paper trading. All values below are synthetic fixtures.{" "}
+            <Badge>DEMO</Badge>
           </>
         }
       />
@@ -66,10 +63,10 @@ export function HomePage() {
           badge={<Badge tone="info">HISTORICAL · NOT PREDICTIVE</Badge>}
         />
         <MetricCard
-          label="Policies needing review"
-          value={String(demoPolicies.filter((p) => p.reviewStatus === "Unreviewed").length)}
-          sub={`${uncertainRenewals} renewal date uncertain`}
-          badge={<Badge tone="muted">REVIEW REQUIRED</Badge>}
+          label="Market snapshot (demo)"
+          value={String(demoQuotes.length)}
+          sub={`${demoQuotes.filter((q) => q.exchange === "NSE").length} NSE · ${demoQuotes.filter((q) => q.exchange === "BSE").length} BSE · DEMO_DATA`}
+          badge={<Badge tone="muted">NOT LIVE</Badge>}
         />
       </div>
 
@@ -87,10 +84,10 @@ export function HomePage() {
           cta="Open paper trading"
         />
         <ActionCard
-          title="Review policies"
-          body="Vault, extraction review, and comparison."
-          to="/insurance/vault"
-          cta="Open vault"
+          title="Run a backtest"
+          body="Replay a strategy over demo bars with stated costs."
+          to="/trading/backtesting"
+          cta="Open backtesting"
         />
         <ActionCard
           title="Ask Copilot"

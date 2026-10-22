@@ -56,6 +56,33 @@ class Candle(Base):
     instrument: Mapped[Instrument] = relationship(back_populates="candles")
 
 
+class BacktestRun(Base):
+    __tablename__ = "backtest_runs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    exchange: Mapped[str] = mapped_column(String(8), nullable=False, index=True)
+    symbol: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    strategy_name: Mapped[str] = mapped_column(String(64), nullable=False)
+    strategy_version: Mapped[str] = mapped_column(String(32), nullable=False, default="1")
+    params_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
+    start_ts: Mapped[int] = mapped_column(Integer, nullable=False)
+    end_ts: Mapped[int] = mapped_column(Integer, nullable=False)
+    split_ts: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    initial_capital: Mapped[float] = mapped_column(Float, nullable=False)
+    allocation_pct: Mapped[float] = mapped_column(Float, nullable=False)
+    cost_bps: Mapped[float] = mapped_column(Float, nullable=False)
+    slippage_bps: Mapped[float] = mapped_column(Float, nullable=False)
+    execution_rule: Mapped[str] = mapped_column(String(64), nullable=False, default="signal_at_close_execute_next_open")
+    dataset_source: Mapped[str] = mapped_column(String(32), nullable=False, default="IMPORTED_CSV")
+    dataset_first_ts: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    dataset_last_ts: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    candle_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    status: Mapped[str] = mapped_column(String(16), nullable=False, default="COMPLETED")
+    error_message: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    result_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+
 class ImportRun(Base):
     __tablename__ = "import_runs"
 

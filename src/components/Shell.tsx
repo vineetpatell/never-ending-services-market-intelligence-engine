@@ -11,24 +11,12 @@ const NAV = [
       { to: "/trading/screener", label: "Screener" },
       { to: "/trading/watchlist", label: "Watchlist" },
       { to: "/trading/analysis", label: "Stock analysis" },
-{ to: "/trading/chart", label: "Chart explorer" },
+      { to: "/trading/chart", label: "Chart explorer" },
       { to: "/trading/strategies", label: "Strategies" },
       { to: "/trading/backtesting", label: "Backtesting" },
       { to: "/trading/paper", label: "Paper trading" },
       { to: "/trading/risk", label: "Portfolio & risk" },
       { to: "/trading/motion-lab", label: "Motion Lab" },
-    ],
-  },
-  {
-    to: "/insurance",
-    label: "Insurance",
-    children: [
-      { to: "/insurance", label: "Overview", end: true },
-      { to: "/insurance/vault", label: "Policy vault" },
-      { to: "/insurance/review", label: "Document review" },
-      { to: "/insurance/comparison", label: "Comparison" },
-      { to: "/insurance/claims", label: "Claims checklist" },
-      { to: "/insurance/renewals", label: "Renewals" },
     ],
   },
   { to: "/copilot", label: "Copilot" },
@@ -184,8 +172,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </main>
 
           <footer className="border-t border-[var(--color-nes-line)] px-4 py-4 text-xs text-[var(--color-nes-ink-2)] nes-dark:border-[var(--color-nes-d-line)] nes-dark:text-[var(--color-nes-d-ink-2)] md:px-6">
-            NES personal prototype · paper trading only · no live orders · no
-            insurance purchases · demo content is illustrative, not advice.
+            NES personal prototype · paper trading only · no live orders ·
+            demo content is illustrative, not advice.
           </footer>
         </div>
       </div>

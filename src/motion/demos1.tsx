@@ -41,7 +41,7 @@ export function DemoA01({ reduced }: { reduced: boolean }) {
 }
 
 /** A02 — Card stagger entrance: 40ms stagger, 480ms budget. */
-const STAGGER_CARDS = ["Watchlist", "Snapshot", "Policies", "Activity", "Copilot"];
+const STAGGER_CARDS = ["Watchlist", "Snapshot", "Backtests", "Activity", "Copilot"];
 
 export function DemoA02({ reduced }: { reduced: boolean }) {
   useGsapPlugins();

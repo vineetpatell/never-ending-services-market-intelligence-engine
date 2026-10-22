@@ -14,8 +14,9 @@ Verified toolchain state + setup guidance. Follows baseline document 17
 | Python | **3.10.11** | **Not 3.11** — see below |
 | RAM / GPU | 16 GB / RTX 4050 6 GB VRAM | One heavy process at a time |
 
-No PDF tooling, no frontend/backend dependencies, and no model runtimes are
-installed. Phase 1A installs nothing (per phase rules).
+The frontend and backend dependencies are now installed from the committed
+lockfile (Node 22 + Python 3.10.11 venv). No model runtimes are installed —
+local AI stays disabled (ADR-0006).
 
 ## Python 3.11 requirement (NOT yet satisfied)
 
@@ -40,12 +41,12 @@ Before the backend phase:
 - `MARKET_PROVIDER=demo` stays until a doc-11 provider evaluation + ADR says
   otherwise. `LOCAL_MODEL_URL` stays empty until M7.
 
-## First-run checklist (applies once the scaffold exists)
+## First-run checklist
 
 Per doc 17: clone/open → install from the committed lockfile → copy `.env` from
 the example → run lint, type-check, tests, build → start frontend (and backend
 only when its phase lands) → verify loopback-only access → confirm every
-market/policy value shows DEMO labelling.
+market value shows DEMO labelling.
 
 ## Verification commands (verified 2026-10-21)
 
@@ -54,14 +55,20 @@ market/policy value shows DEMO labelling.
 - `npm test` — Vitest (jsdom) over `src/charts/__tests__/`.
 - `npm run build` — `tsc -b && vite build`.
 
-## Backend verification (Phase 5, 2026-10-21)
+## Backend verification (Phase 5–6, 2026-10-21)
 
 - Python 3.11 was NOT available; used system Python 3.10.11 in `.venv` (no global changes).
-- Backend tests: `cd backend && ..\.venv\Scripts\python.exe -m pytest -q` → 18 passed.
+- Backend tests: `cd backend && ..\.venv\Scripts\python.exe -m pytest -q` → 25 passed.
 - Backend run: `cd backend && ..\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000`.
 - Health check: `GET http://127.0.0.1:8000/api/v1/health` → `{"status":"ok","version":"0.1.0","database":"ok"}`.
-- Frontend gates still pass: lint 0, typecheck 0, 36/36 tests, build success.
+- Frontend gates still pass: lint 0, typecheck 0, 48/48 tests, build success.
 All four must pass before a change is considered done.
+
+## Product scope change (2026-10-21)
+
+The frontend-only insurance module was removed; the product is finance-only.
+See `adr/ADR-0008-finance-only-product-reorientation.md`. No backend route,
+model, schema, or migration changed — the insurance module never had one.
 
 ## Reproducibility rule
 

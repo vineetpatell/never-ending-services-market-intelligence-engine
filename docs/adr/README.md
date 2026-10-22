@@ -22,3 +22,5 @@ One file per significant technical decision, following document 21
 | ADR-0004 | TypeScript/Python testing approach | Accepted | 2026-10-20 |
 | ADR-0005 | Demo-only market data; delayed provider selection | Accepted | 2026-10-20 |
 | ADR-0006 | Local AI disabled until separately evaluated | Accepted | 2026-10-20 |
+| ADR-0007 | Historical coverage service and local backtesting engine | Accepted | 2026-10-21 |
+| ADR-0008 | Finance-only product reorientation; insurance module removed | Accepted | 2026-10-21 |

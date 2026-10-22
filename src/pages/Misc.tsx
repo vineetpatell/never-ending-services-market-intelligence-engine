@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import { ActionCard, Badge, Button, Card, EmptyState, PageHeader } from "../components/ui";
-import { demoActivity, demoBacktests, demoPolicies } from "../data/demo";
+import { demoActivity, demoBacktests } from "../data/demo";
 
 export function LibraryPage() {
   return (
     <div className="flex flex-col gap-5">
       <PageHeader
         title="Library"
-        description={<>Saved research, policies, reports, and exports with source metadata. <Badge>DEMO</Badge></>}
+        description={<>Saved research, reports, and exports with source metadata. <Badge>DEMO</Badge></>}
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
@@ -23,18 +23,7 @@ export function LibraryPage() {
         </Card>
         <Card>
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold">Saved policies</h2>
-            <Badge tone="muted">{demoPolicies.length} DEMO</Badge>
-          </div>
-          <ul className="mt-2 flex flex-col gap-1 text-sm">
-            {demoPolicies.map((p) => (
-              <li key={p.id}>{p.id} · {p.category} · {p.reviewStatus}</li>
-            ))}
-          </ul>
-        </Card>
-        <Card>
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold">Reports & exports</h2>
+            <h2 className="text-base font-semibold">Saved backtests</h2>
             <Badge tone="muted">{demoBacktests.length} DEMO</Badge>
           </div>
           <ul className="mt-2 flex flex-col gap-1 text-sm">
@@ -117,7 +106,7 @@ export function SettingsPage() {
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <ActionCard title="Review Copilot" body="Preset demo prompts and limitations." to="/copilot" cta="Open Copilot" />
-        <ActionCard title="Browse library" body="Saved demo research and policies." to="/library" cta="Open Library" />
+        <ActionCard title="Browse library" body="Saved demo research and backtests." to="/library" cta="Open Library" />
       </div>
     </div>
   );

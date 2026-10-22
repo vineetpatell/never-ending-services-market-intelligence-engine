@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 
 from app.config import settings
 from app.database import init_db
-from app.routers import candles, data_status, health, imports, instruments
+from app.routers import backtests, candles, coverage, data_status, health, imports, instruments
 
 app = FastAPI(title="NES Market Intelligence Backend", version="0.1.0")
 
@@ -38,3 +38,5 @@ app.include_router(instruments.router)
 app.include_router(candles.router)
 app.include_router(data_status.router)
 app.include_router(imports.router)
+app.include_router(coverage.router)
+app.include_router(backtests.router)

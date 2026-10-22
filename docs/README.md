@@ -26,7 +26,7 @@ They are the Phase 0–verified requirements baseline (see the Phase 0 audit rep
 - `10_Security_Privacy_and_Threat_Model.pdf` (NES-SEC-010) — localhost-first, redaction, upload rules.
 - `11_Market_Data_Source_Specification.pdf` (NES-MKT-011) — provider checklist, adapter contract, freshness states.
 - `12_Backtesting_Methodology_Specification.pdf` (NES-BT-012) — inputs, bias controls, metrics, validation.
-- `13_Insurance_Document_and_Comparison_Rules.pdf` (NES-INS-013) — extraction review, comparison, claims limits.
+- `13_Insurance_Document_and_Comparison_Rules.pdf` (NES-INS-013) — extraction review, comparison, claims limits. **Out of current product scope** — the insurance module was removed (ADR-0008); the PDF remains the immutable baseline record.
 - `14_AI_Behaviour_and_Evaluation_Plan.pdf` (NES-AI-014) — Copilot grounding, answer structure, eval cases.
 - `15_Error_Handling_and_Diagnostics_Plan.pdf` (NES-OPS-015) — error categories, logging, diagnostics.
 - `16_Backup_Restore_and_Data_Retention_Plan.pdf` (NES-DATAOPS-016) — backup scope, restore flow, deletion semantics.
@@ -49,7 +49,16 @@ They are the Phase 0–verified requirements baseline (see the Phase 0 audit rep
 ## What lives here
 
 - `adr/` — Architecture Decision Records (see `adr/README.md`).
-- `animation-inventory.md` — proposed 12-animation Motion Lab inventory (design proposals, not implemented features).
+- `animation-inventory.md` — the 12-animation Motion Lab inventory, implemented in `src/motion/` (A07/A08 re-themed to finance scope in ADR-0008).
 - `development-environment.md` — verified toolchain versions and setup guidance.
 - Future: changelog entries, milestone status, ERD, contract notes — each added
   only when its phase work actually runs.
+
+## Current product scope (living note)
+
+The product is finance-only: market data, charts, historical coverage,
+backtesting, paper trading, and the Copilot. The insurance module described in
+the baseline was removed on 2026-10-21 — see
+`adr/ADR-0008-finance-only-product-reorientation.md`. The baseline PDFs were
+not modified; this note records the divergence so living docs and the baseline
+never disagree silently.
